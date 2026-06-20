@@ -784,7 +784,7 @@ function Sidebar({role,user,active,setActive,onLogout,cartCount,notifCount}){
   const roleLabel={manager:"Manager",ss:"Super Stockist",distributor:"Distributor",retailer:"Retailer"};
 
   return(
-    <div style={{width:"100%",height:"100vh",flexShrink:0,background:"linear-gradient(180deg,#0A1648 0%,#1A237E 50%,#283593 100%)",display:"flex",flexDirection:"column",fontFamily:"'Poppins','Segoe UI',sans-serif",overflow:"hidden",position:"fixed",left:0,top:0,zIndex:500}}>
+    <div style={{width:"100%",height:"100vh",flexShrink:0,background:"linear-gradient(180deg,#0A1648 0%,#1A237E 50%,#283593 100%)",display:"flex",flexDirection:"column",fontFamily:"'Poppins','Segoe UI',sans-serif",overflow:"hidden"}}>
       <div style={{padding:"22px 18px 14px",borderBottom:"1px solid rgba(255,255,255,0.1)"}}>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
           <div style={{width:38,height:38,borderRadius:19,background:"white",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🍦</div>
@@ -827,10 +827,19 @@ function Sidebar({role,user,active,setActive,onLogout,cartCount,notifCount}){
 // ============================================================
 function Dashboard({role,user,refreshKey}){
   const orders=DB.getAll("orders");
-  const myOrders=role==="manager"?orders:orders.filter(o=>o.placedBy===user._id);
-  const pending=myOrders.filter(o=>o.status==="Pending").length;
-  const delivered=myOrders.filter(o=>o.status==="Delivered").length;
-  const revenue=myOrders.reduce((s,o)=>s+o.grandTotal,0);
+  const placedOrders = orders.filter(o=>o.placedBy===user._id);
+  const receivedOrders = role==="manager"?orders:orders.filter(o=>o.placedTo===user._id);
+  
+  const myOrders = [...placedOrders, ...receivedOrders].filter((v,i,a)=>a.findIndex(t=>(t._id===v._id))===i);
+
+  const pendingReceived = receivedOrders.filter(o=>o.status==="Pending").length;
+  const deliveredReceived = receivedOrders.filter(o=>o.status==="Delivered").length;
+  const revenueReceived = receivedOrders.reduce((s,o)=>s+o.grandTotal,0);
+
+  const pendingPlaced = placedOrders.filter(o=>o.status==="Pending").length;
+  const deliveredPlaced = placedOrders.filter(o=>o.status==="Delivered").length;
+  const spentPlaced = placedOrders.reduce((s,o)=>s+o.grandTotal,0);
+
   const users=DB.getAll("users");
   const ssCount=users.filter(u=>u.role==="ss"&&u.status==="active").length;
   const distCount=users.filter(u=>u.role==="distributor"&&u.status==="active").length;
@@ -838,9 +847,19 @@ function Dashboard({role,user,refreshKey}){
 
   const statsByRole={
     manager:[{icon:"🏬",label:"Super Stockists",value:ssCount,color:"#4FC3F7"},{icon:"🚚",label:"Distributors",value:distCount,color:"#81C784"},{icon:"🛍️",label:"Retailers",value:retailCount,color:"#FFB74D"},{icon:"📋",label:"Total Orders",value:orders.length,color:"#FF6B9D"}],
-    ss:[{icon:"🚚",label:"My Distributors",value:users.filter(u=>u.role==="distributor"&&u.ssId===user._id&&u.status==="active").length,color:"#81C784"},{icon:"⏳",label:"Pending",value:pending,color:"#FFB74D"},{icon:"✅",label:"Delivered",value:delivered,color:"#4FC3F7"},{icon:"💰",label:"Revenue",value:"₹"+revenue.toFixed(0),color:"#FF6B9D"}],
-    distributor:[{icon:"📋",label:"My Orders",value:myOrders.length,color:"#4FC3F7"},{icon:"⏳",label:"Pending",value:pending,color:"#FFB74D"},{icon:"✅",label:"Delivered",value:delivered,color:"#81C784"},{icon:"💰",label:"Total Value",value:"₹"+revenue.toFixed(0),color:"#FF6B9D"}],
-    retailer:[{icon:"📋",label:"Orders Placed",value:myOrders.length,color:"#4FC3F7"},{icon:"⏳",label:"Pending",value:pending,color:"#FFB74D"},{icon:"✅",label:"Delivered",value:delivered,color:"#81C784"},{icon:"💰",label:"Total Spent",value:"₹"+revenue.toFixed(0),color:"#FF6B9D"}],
+    ss:[
+      {icon:"📥",label:"Orders Received",value:receivedOrders.length,color:"#4FC3F7"},
+      {icon:"💰",label:"Revenue",value:"₹"+revenueReceived.toFixed(0),color:"#FF6B9D"},
+      {icon:"📤",label:"Orders Placed",value:placedOrders.length,color:"#81C784"},
+      {icon:"⏳",label:"Pending Placed",value:pendingPlaced,color:"#FFB74D"},
+      {icon:"💸",label:"Spent",value:"₹"+spentPlaced.toFixed(0),color:"#FF6B9D"},
+      {icon:"🚚",label:"My Distributors",value:users.filter(u=>u.role==="distributor"&&u.ssId===user._id&&u.status==="active").length,color:"#4FC3F7"}
+    ],
+    distributor:[
+      {icon:"📥",label:"Orders Received",value:receivedOrders.length,color:"#4FC3F7"},{icon:"💰",label:"Revenue",value:"₹"+revenueReceived.toFixed(0),color:"#FF6B9D"},
+      {icon:"📤",label:"Orders Placed",value:placedOrders.length,color:"#81C784"},{icon:"⏳",label:"Pending Placed",value:pendingPlaced,color:"#FFB74D"},{icon:"💸",label:"Spent (Placed)",value:"₹"+spentPlaced.toFixed(0),color:"#FF6B9D"}
+    ],
+    retailer:[{icon:"📋",label:"Orders Placed",value:placedOrders.length,color:"#4FC3F7"},{icon:"⏳",label:"Pending",value:pendingPlaced,color:"#FFB74D"},{icon:"✅",label:"Delivered",value:deliveredPlaced,color:"#81C784"},{icon:"💰",label:"Total Spent",value:"₹"+spentPlaced.toFixed(0),color:"#FF6B9D"}],
   };
   const recentOrders=[...myOrders].sort((a,b)=>b.createdAt-a.createdAt).slice(0,6);
 
@@ -892,13 +911,15 @@ function ProductImg({category,size=50}){
   return <div style={{width:size,height:size,borderRadius:size/2,background:color+"22",border:`2px solid ${color}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:size*.44,flexShrink:0}}>{emoji}</div>;
 }
 
-function ProductCatalog({role,user,cart,setCart}){
+function ProductCatalog({role,user,cart,setCart,setActive}){
   const [catFilter,setCatFilter]=useState("All");
   const [search,setSearch]=useState("");
   const [modal,setModal]=useState(null);
   const [qty,setQty]=useState(1);
   const products=DB.getAll("products");
   const cats=[...new Set(products.map(p=>p.category))];
+
+  const [cardQtys,setCardQtys]=useState({});
 
   const filtered=products.filter(p=>{
     const c=catFilter==="All"||p.category===catFilter;
@@ -920,10 +941,8 @@ function ProductCatalog({role,user,cart,setCart}){
     setQty(ex?ex.cartons:1);
   }
 
-  function addToCart(){
-    if(!modal) return;
-    const p=modal;
-    const cartons=Math.max(1,parseInt(qty)||1);
+  function addOrUpdateCart(p, cartons){
+    cartons = Math.max(1, parseInt(cartons) || 1);
     const rate=getRate(p);
     const amount=rate*p.unitInCrate*cartons;
     setCart(prev=>{
@@ -932,10 +951,20 @@ function ProductCatalog({role,user,cart,setCart}){
       if(ex) return prev.map(c=>c.productId===p.id?item:c);
       return [...prev,item];
     });
+  }
+
+  function addToCart(){
+    if(!modal) return;
+    addOrUpdateCart(modal, qty);
     setModal(null);
   }
 
-  const cartIds=new Set(cart.map(c=>c.productId));
+  function handleCardQty(id, val){
+    setCardQtys(prev=>({...prev, [id]: Math.max(1, parseInt(val)||1)}));
+  }
+
+  // Create a map of cart items for fast lookup
+  const cartMap = cart.reduce((acc, c) => { acc[c.productId] = c; return acc; }, {});
 
   return(
     <div>
@@ -959,17 +988,33 @@ function ProductCatalog({role,user,cart,setCart}){
           </div>
           <div className="catalog-grid">
             {items.map(p=>{
-              const inCart=cartIds.has(p.id);
+              const inCartItem = cartMap[p.id];
+              const inCart = !!inCartItem;
               const color=CAT_COLOR[p.category]||"#FF6B9D";
+              const currentQty = cardQtys[p.id] || 1;
               return(
-                <div key={p.id} onClick={()=>openModal(p)} className="card-hover" style={{background:"white",borderRadius:12,padding:13,cursor:"pointer",border:inCart?`2px solid ${color}`:"1.5px solid #F0F0F0",position:"relative",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}}>
+                <div key={p.id} className="card-hover" style={{background:"white",borderRadius:12,padding:13,border:inCart?`2px solid ${color}`:"1.5px solid #F0F0F0",position:"relative",boxShadow:"0 2px 8px rgba(0,0,0,0.04)",display:"flex",flexDirection:"column"}}>
                   {inCart&&<div style={{position:"absolute",top:7,right:7,width:18,height:18,borderRadius:9,background:color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"white",fontWeight:900}}>✓</div>}
                   <ProductImg category={p.category} size={46}/>
                   <p style={{margin:"9px 0 1px",fontWeight:700,fontSize:12,color:"#1A237E"}}>{p.name}</p>
                   <p style={{margin:0,fontSize:10,color:"#AAA"}}>{p.ml} · {p.pcs} pcs/box</p>
-                  <div style={{marginTop:7,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <div style={{marginTop:7,display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
                     <span style={{fontSize:12,fontWeight:800,color:"#2E7D32"}}>₹{getRate(p).toFixed(2)}</span>
                     <span style={{fontSize:10,color:"#CCC"}}>MRP ₹{p.mrp}</span>
+                  </div>
+                  <div style={{marginTop:"auto"}} onClick={e=>e.stopPropagation()}>
+                    {inCart ? (
+                      <div style={{display:"flex", alignItems:"center", gap:6, background:"#E8F5E9", padding:"6px", borderRadius:8, border:"1px solid #C8E6C9"}}>
+                        <button onClick={()=>addOrUpdateCart(p, Math.max(1, inCartItem.cartons-1))} style={{width:24,height:24,borderRadius:12,border:"none",background:"white",color:"#2E7D32",fontWeight:800,cursor:"pointer",boxShadow:"0 1px 3px rgba(0,0,0,0.1)"}}>−</button>
+                        <span style={{flex:1,textAlign:"center",fontSize:12,fontWeight:800,color:"#2E7D32"}}>{inCartItem.cartons} ctn</span>
+                        <button onClick={()=>addOrUpdateCart(p, inCartItem.cartons+1)} style={{width:24,height:24,borderRadius:12,border:"none",background:"white",color:"#2E7D32",fontWeight:800,cursor:"pointer",boxShadow:"0 1px 3px rgba(0,0,0,0.1)"}}>+</button>
+                      </div>
+                    ) : (
+                      <div style={{display:"flex",gap:6}}>
+                        <input type="number" min="1" value={currentQty} onChange={e=>handleCardQty(p.id, e.target.value)} style={{width:45,textAlign:"center",border:"1.5px solid #E2E8F0",borderRadius:8,fontSize:12,fontWeight:700,outline:"none"}} />
+                        <Btn small onClick={()=>addOrUpdateCart(p, currentQty)} style={{flex:1,padding:"6px",fontSize:11}}>🛒 Add</Btn>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -1111,28 +1156,15 @@ function Basket({role,user,cart,setCart,onConfirm}){
                 </div>
                 <button onClick={() => remove(item.productId)} style={{ background: "#FFEBEE", border: "none", borderRadius: 6, padding: "5px 8px", cursor: "pointer", color: "#E53935", fontSize: 12 }}>🗑️ Delete</button>
               </div>
-              <div className="mobile-order-item-details">
-                <div className="mobile-order-item-detail-row">
-                  <span className="mobile-order-item-label">Cartons</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
-                    <button onClick={() => updateQty(item.productId, Math.max(1, item.cartons - 1))} style={{ width: 24, height: 24, borderRadius: 12, border: "1.5px solid #333", background: "white", cursor: "pointer", fontSize: 14, fontWeight: 800, color: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
-                    <span style={{ minWidth: 20, textAlign: "center", fontWeight: 800, fontSize: 13 }}>{item.cartons}</span>
-                    <button onClick={() => updateQty(item.productId, item.cartons + 1)} style={{ width: 24, height: 24, borderRadius: 12, border: "1.5px solid #333", background: "white", cursor: "pointer", fontSize: 14, fontWeight: 800, color: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
-                  </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 4 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <button onClick={() => updateQty(item.productId, Math.max(1, item.cartons - 1))} style={{ width: 24, height: 24, borderRadius: 12, border: "1.5px solid #333", background: "white", cursor: "pointer", fontSize: 14, fontWeight: 800, color: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
+                  <span style={{ minWidth: 24, textAlign: "center", fontWeight: 800, fontSize: 13 }}>{item.cartons} <span style={{fontSize:10,fontWeight:600,color:"#666"}}>ctn</span></span>
+                  <button onClick={() => updateQty(item.productId, item.cartons + 1)} style={{ width: 24, height: 24, borderRadius: 12, border: "1.5px solid #333", background: "white", cursor: "pointer", fontSize: 14, fontWeight: 800, color: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
                 </div>
-                <div className="mobile-order-item-detail-row">
-                  <span className="mobile-order-item-label">Boxes / Pcs</span>
-                  <span className="mobile-order-item-value" style={{ marginTop: 6, display: "block" }}>
-                    {item.cartons * item.unitInCrate} bx / {item.cartons * item.unitInCrate * item.pcs} pcs
-                  </span>
-                </div>
-                <div className="mobile-order-item-detail-row">
-                  <span className="mobile-order-item-label">Rate</span>
-                  <span className="mobile-order-item-value" style={{ marginTop: 6, display: "block" }}>₹{rate.toFixed(2)}</span>
-                </div>
-                <div className="mobile-order-item-detail-row">
-                  <span className="mobile-order-item-label">Subtotal</span>
-                  <span className="mobile-order-item-value" style={{ marginTop: 6, display: "block", color: "#2E7D32", fontWeight: 800 }}>₹{amount.toFixed(2)}</span>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: 10, color: "#888", marginBottom: 2 }}>{item.cartons * item.unitInCrate} bx @ ₹{rate.toFixed(2)}</div>
+                  <div style={{ color: "#2E7D32", fontWeight: 800, fontSize: 13 }}>₹{amount.toFixed(2)}</div>
                 </div>
               </div>
             </div>
@@ -1155,20 +1187,90 @@ function Basket({role,user,cart,setCart,onConfirm}){
 }
 
 // ============================================================
+// EDIT ORDER MODAL
+// ============================================================
+function EditOrderModal({order, user, onClose, onSave}) {
+  const [items, setItems] = useState(order.items.map(i=>({...i})));
+  
+  function updateQty(productId, cartons) {
+    setItems(prev => prev.map(c => {
+      if(c.productId !== productId) return c;
+      const rate = order.role === "distributor" || order.role === "retailer" ? c.distRate : c.ssRate;
+      return {...c, cartons, totalUnits: cartons * c.unitInCrate * c.pcs, amount: rate * c.unitInCrate * cartons};
+    }));
+  }
+
+  function handleSave() {
+    const grandTotal = items.reduce((s,i) => s + i.amount, 0);
+    DB.update("orders", {id: order.id}, {items, grandTotal});
+    const o = DB.findOne("orders", {id: order.id});
+    generateOrderExcel(o, DB.getAll("products"), o.role);
+    const target = user && user._id === o.placedBy ? o.placedTo : o.placedBy;
+    const editorName = user ? user.name : "SS";
+    pushNotif("✏️", "Order Updated", `Order ${order.id} was updated by ${editorName}`, target);
+    onSave();
+  }
+
+  const grandTotal = items.reduce((s,i) => s + i.amount, 0);
+
+  return (
+    <Modal open={true} onClose={onClose}>
+      <h2 style={{margin:"0 0 16px", color:"#1A237E"}}>Edit Order {order.id}</h2>
+      <div style={{maxHeight:"60vh", overflowY:"auto", paddingRight:6}}>
+        {items.map(item => {
+          const rate = order.role === "distributor" || order.role === "retailer" ? item.distRate : item.ssRate;
+          return (
+            <div key={item.productId} style={{padding:"12px 0", borderBottom:"1px solid #EEE"}}>
+              <div style={{fontWeight:700, color:"#333"}}>{item.name}</div>
+              <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginTop:8, flexWrap:"wrap", gap:10}}>
+                <div style={{display:"flex", alignItems:"center", gap:6}}>
+                  <button onClick={() => updateQty(item.productId, Math.max(1, item.cartons - 1))} style={{width:24, height:24, borderRadius:12, border:"1px solid #CCC", background:"white", cursor:"pointer", fontWeight:800}}>−</button>
+                  <span style={{minWidth:24, textAlign:"center", fontSize:13, fontWeight:700}}>{item.cartons} ctn</span>
+                  <button onClick={() => updateQty(item.productId, item.cartons + 1)} style={{width:24, height:24, borderRadius:12, border:"1px solid #CCC", background:"white", cursor:"pointer", fontWeight:800}}>+</button>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:11, color:"#888"}}>{item.cartons * item.unitInCrate} bx @ ₹{rate.toFixed(2)}</div>
+                  <div style={{fontSize:13, fontWeight:800, color:"#2E7D32"}}>₹{item.amount.toFixed(2)}</div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{marginTop:16, display:"flex", justifyContent:"space-between", alignItems:"center", background:"#F8F9FA", padding:12, borderRadius:8}}>
+        <div style={{fontSize:12, color:"#666"}}>Grand Total</div>
+        <div style={{fontSize:18, fontWeight:800, color:"#1A237E"}}>₹{grandTotal.toFixed(2)}</div>
+      </div>
+      <div style={{display:"flex", gap:8, marginTop:16}}>
+        <Btn variant="secondary" onClick={onClose} style={{flex:1}}>Cancel</Btn>
+        <Btn variant="primary" onClick={handleSave} style={{flex:1}}>Save Changes</Btn>
+      </div>
+    </Modal>
+  );
+}
+
+// ============================================================
 // ORDERS LIST  (with Excel download button per order)
 // ============================================================
 function OrdersList({role,user,refreshKey}){
   const [filter,setFilter]=useState("All");
   const [expandedId,setExpandedId]=useState(null);
+  const [editOrder,setEditOrder]=useState(null);
+  const [, forceRender] = useState({});
+  
+  const showTabs = role === "ss" || role === "distributor";
+  const defaultTab = role === "retailer" ? "placed" : "received";
+  const [orderType, setOrderType] = useState(defaultTab);
+
   const allOrders=DB.getAll("orders");
   const products=DB.getAll("products");
 
-  let myOrders=allOrders;
-  if(role==="ss") myOrders=allOrders.filter(o=>o.ssId===user._id||o.placedBy===user._id);
-  if(role==="distributor") myOrders=allOrders.filter(o=>o.placedBy===user._id||o.distId===user._id);
-  if(role==="retailer") myOrders=allOrders.filter(o=>o.placedBy===user._id);
+  const placedOrders = allOrders.filter(o=>o.placedBy===user._id);
+  const receivedOrders = role==="manager"?allOrders:allOrders.filter(o=>o.placedTo===user._id);
+  
+  let myOrders = orderType === "placed" ? placedOrders : receivedOrders;
 
-  const statuses=["All","Draft","Completed"];
+  const statuses=["All","Draft","Pending","Confirmed","Dispatched","Delivered","Rejected","Cancelled"];
   const filtered=filter==="All"?myOrders:myOrders.filter(o=>o.status===filter);
   const sorted=[...filtered].sort((a,b)=>b.createdAt-a.createdAt);
 
@@ -1178,25 +1280,52 @@ function OrdersList({role,user,refreshKey}){
     if(o){
       pushNotif("📦",`Order ${status}`,`Order ${orderId} has been ${status.toLowerCase()}`,o.placedBy);
     }
+    forceRender({});
   }
 
-  const nextStatus={Draft:["Completed"],Completed:[]};
+  const nextStatus={
+    Draft:["Pending"],
+    Pending:["Confirmed", "Rejected"],
+    Confirmed:["Dispatched", "Cancelled"],
+    Dispatched:["Delivered"],
+    Delivered:[],
+    Rejected:[],
+    Cancelled:[]
+  };
 
   return(
     <div>
-      <h2 style={{margin:"0 0 18px",fontSize:20,fontWeight:800,color:"#1A237E"}}>📋 {role==="manager"?"All Orders":"My Orders"} <span style={{fontSize:13,color:"#888",fontWeight:400}}>({sorted.length})</span></h2>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18,flexWrap:"wrap",gap:10}}>
+        <h2 style={{margin:0,fontSize:20,fontWeight:800,color:"#1A237E"}}>📋 {role==="manager"?"All Orders":"My Orders"} <span style={{fontSize:13,color:"#888",fontWeight:400}}>({sorted.length})</span></h2>
+        {showTabs && (
+          <div style={{display:"flex",gap:10,background:"#F0F0F0",padding:4,borderRadius:12}}>
+            <button onClick={()=>{setOrderType("received");setFilter("All");}} style={{padding:"6px 14px",border:"none",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",background:orderType==="received"?"white":"transparent",color:orderType==="received"?"#1A237E":"#666",boxShadow:orderType==="received"?"0 2px 6px rgba(0,0,0,0.05)":"none"}}>📥 Orders Received</button>
+            <button onClick={()=>{setOrderType("placed");setFilter("All");}} style={{padding:"6px 14px",border:"none",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",background:orderType==="placed"?"white":"transparent",color:orderType==="placed"?"#1A237E":"#666",boxShadow:orderType==="placed"?"0 2px 6px rgba(0,0,0,0.05)":"none"}}>📤 Orders Placed</button>
+          </div>
+        )}
+      </div>
+
       <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:18}}>
-        {statuses.map(s=>(
-          <button key={s} onClick={()=>setFilter(s)} style={{padding:"5px 13px",borderRadius:20,border:"none",cursor:"pointer",fontSize:11,fontWeight:700,background:filter===s?"#1A237E":"#F0F0F0",color:filter===s?"white":"#555"}}>
-            {s} {s!=="All"&&<span style={{opacity:.6}}>({allOrders.filter(o=>o.status===s).length})</span>}
-          </button>
-        ))}
+        {statuses.map(s=>{
+          const count = s==="All" ? myOrders.length : myOrders.filter(o=>o.status===s).length;
+          if (s !== "All" && count === 0 && filter !== s) return null;
+          return (
+            <button key={s} onClick={()=>setFilter(s)} style={{padding:"5px 13px",borderRadius:20,border:"none",cursor:"pointer",fontSize:11,fontWeight:700,background:filter===s?"#1A237E":"#F0F0F0",color:filter===s?"white":"#555"}}>
+              {s} {s!=="All"&&<span style={{opacity:.6}}>({count})</span>}
+            </button>
+          );
+        })}
       </div>
 
       {sorted.length===0?<div style={{textAlign:"center",padding:"50px 0",color:"#CCC"}}><div style={{fontSize:42}}>📭</div><p>No orders found</p></div>:(
         <div style={{display:"flex",flexDirection:"column",gap:11}}>
           {sorted.map(order=>{
-            const actions=(role==="manager"||(role==="ss"&&order.placedBy!==user._id))?nextStatus[order.status]||[]:[];
+            let actions = [];
+            if (orderType === "received" || role === "manager") {
+               actions = nextStatus[order.status] || [];
+            } else if (orderType === "placed" && (order.status === "Pending" || order.status === "Draft")) {
+               actions = ["Cancelled"];
+            }
             const exp=expandedId===order._id;
             return(
               <div key={order._id} style={{background:"white",borderRadius:13,overflow:"hidden",boxShadow:"0 2px 8px rgba(0,0,0,0.05)",border:"1px solid #F0F0F0"}}>
@@ -1213,18 +1342,21 @@ function OrdersList({role,user,refreshKey}){
                     <div style={{textAlign:"right"}}>
                       <p style={{margin:0,fontSize:19,fontWeight:800,color:"#2E7D32"}}>₹{order.grandTotal.toFixed(2)}</p>
                       <div style={{display:"flex",gap:6,marginTop:5,justifyContent:"flex-end"}}>
-                        <Btn small variant="success" onClick={()=>generateOrderExcel(order,products,role)}>⬇️ Download Excel</Btn>
+                        <Btn small variant="success" onClick={()=>generateOrderExcel(order, products, order.role)}>⬇️ Download Excel</Btn>
                         <Btn small variant="secondary" onClick={()=>setExpandedId(exp?null:order._id)}>{exp?"▲ Hide":"▼ Details"}</Btn>
                       </div>
                     </div>
                   </div>
-                  {actions.length>0&&(
+                  {(actions.length>0 || order.status==="Pending" || order.status==="Draft")&&(
                     <div style={{display:"flex",gap:7,marginTop:12}}>
                       {actions.map(s=>(
                         <Btn key={s} small variant={s==="Cancelled"?"danger":"success"} onClick={()=>changeStatus(order.id,s)}>
                           {s==="Cancelled"?"✗ Cancel":"✓ "+s}
                         </Btn>
                       ))}
+                      {(order.status==="Pending" || order.status==="Draft") && (
+                        <Btn small variant="primary" onClick={()=>setEditOrder(order)}>✎ Update</Btn>
+                      )}
                     </div>
                   )}
                 </div>
@@ -1326,6 +1458,9 @@ function OrdersList({role,user,refreshKey}){
             );
           })}
         </div>
+      )}
+      {editOrder && (
+        <EditOrderModal order={editOrder} user={user} onClose={()=>setEditOrder(null)} onSave={()=>{setEditOrder(null); forceRender({});}} />
       )}
     </div>
   );
@@ -1668,7 +1803,7 @@ e.g. Big Cup, Vanilla, 171.02`
 // ============================================================
 function Notifications({user,refreshKey}){
   const all=DB.getAll("notifications");
-  const mine=all.filter(n=>n.targetUserId==="all"||n.targetUserId===user._id).sort((a,b)=>b._id.localeCompare(a._id));
+  const mine=all.filter(n=>n.targetUserId==="all"||n.targetUserId===user._id||(n.targetUserId==="manager_role"&&user.role==="manager")).sort((a,b)=>b._id.localeCompare(a._id));
   if(mine.length===0) return(
     <div style={{textAlign:"center",padding:"70px 0",color:"#CCC"}}><div style={{fontSize:44,marginBottom:10}}>🔔</div><p>No notifications</p></div>
   );
@@ -1704,66 +1839,38 @@ export default function App(){
   function handleLogin(u){setUser(u);setActive("dashboard");}
   function handleLogout(){setUser(null);setCart([]);setActive("dashboard");}
 
-  function generateOrderExcel(orderId,cartItems,role){
-    const workbook = XLSX.utils.book_new();
-    const sheet = XLSX.utils.json_to_sheet([]);
-    const data = [];
-    
-    // Add header info
-    data.push([`Order #${orderId}`]);
-    data.push([`Generated: ${new Date().toLocaleString()}`]);
-    data.push([]);
-    
-    // Add column headers
-    data.push(["SR NO","Product Name","Category","ML","Cartons","Unit/Crate","Pieces","Rate","Amount"]);
-    
-    // Add items with formulas
-    cartItems.forEach((item,idx)=>{
-      const rate = role==="distributor"||role==="retailer"?item.distRate:item.ssRate;
-      // Row data: SR, Product, Cat, ML, Cartons, Unit, Pieces (formula), Rate, Amount (formula)
-      data.push([
-        idx+1,
-        item.name,
-        item.category,
-        item.ml,
-        item.cartons,
-        item.unitInCrate,
-        `=E${data.length+1}*F${data.length+1}`, // Pieces = Cartons * Unit/Crate
-        rate,
-        `=G${data.length+1}*H${data.length+1}` // Amount = Pieces * Rate
-      ]);
-    });
-    
-    data.push([]);
-    data.push(["","","","","TOTAL:","",`=SUM(G${data.length+1-cartItems.length}:G${data.length})`,`GRAND TOTAL:`,`=SUM(I${data.length+1-cartItems.length}:I${data.length})`]);
-    
-    // Convert to sheet
-    const ws = XLSX.utils.aoa_to_sheet(data);
-    ws['!cols'] = [{wch:8},{wch:20},{wch:15},{wch:8},{wch:10},{wch:12},{wch:10},{wch:12},{wch:12}];
-    
-    XLSX.utils.book_append_sheet(workbook, ws, "Order");
-    XLSX.writeFile(workbook, `Order_${orderId}.xlsx`);
-  }
-
   function confirmOrder(cartItems,grandTotal){
     const u=user;
-    const parentSS=u.role==="distributor"?DB.findOne("users",{_id:u.ssId}):u.role==="ss"?u:null;
+    
+    // Determine who the order is placed to
+    let placedTo = "manager";
+    if (u.role === "retailer") {
+      placedTo = u.distId || u.ssId || "manager";
+    } else if (u.role === "distributor") {
+      placedTo = u.ssId || "manager";
+    }
+    
+    const receiver = DB.findOne("users", {_id: placedTo});
+
     const orderId = genOrderId();
     const order=DB.insert("orders",{
       id:orderId,
       placedBy:u._id, placedByName:u.name, role:u.role,
+      placedTo: placedTo,
       ssId:u.role==="ss"?u._id:(u.ssId||null),
       distId:u.role==="distributor"?u._id:null,
       district:u.district||"Nagpur",
       items:cartItems.map(i=>({...i})),
-      grandTotal,status:"Draft",createdAt:Date.now(),
+      grandTotal,status:"Pending",createdAt:Date.now(),
       excelFileName:`Order_${orderId}.xlsx`, // Track the Excel filename
       rateSheetUsed:window._rateSheetMetadata // Store which rate sheet was used
     });
     // Generate Excel file with formulas
-    generateOrderExcel(orderId,cartItems,u.role);
+    generateOrderExcel(order, DB.getAll("products"), u.role);
     pushNotif("✅","Order Placed",`Order ${order.id} placed for ₹${grandTotal.toFixed(2)} by ${u.name}`,u._id);
-    if(parentSS) pushNotif("📦","New Order Received",`${u.name} placed order ${order.id} worth ₹${grandTotal.toFixed(2)}`,parentSS._id);
+    if(receiver) pushNotif("📦","New Order Received",`${u.name} placed order ${order.id} worth ₹${grandTotal.toFixed(2)}`,receiver._id);
+    else if(placedTo === "manager") pushNotif("📦","New Order Received",`${u.name} placed order ${order.id} worth ₹${grandTotal.toFixed(2)}`,"manager_role");
+    
     setCart([]);setActive("orders");setRefreshKey(k=>k+1);
   }
 
@@ -1774,7 +1881,7 @@ export default function App(){
 
   const pages={
     dashboard:<Dashboard role={role} user={user} refreshKey={refreshKey}/>,
-    products:<ProductCatalog role={role} user={user} cart={cart} setCart={setCart}/>,
+    products:<ProductCatalog role={role} user={user} cart={cart} setCart={setCart} setActive={setActive}/>,
     basket:<Basket role={role} user={user} cart={cart} setCart={setCart} onConfirm={confirmOrder}/>,
     orders:<OrdersList role={role} user={user} refreshKey={refreshKey}/>,
     users:<ManageUsers role={role} user={user} refreshKey={refreshKey} setRefreshKey={setRefreshKey}/>,
@@ -1785,7 +1892,7 @@ export default function App(){
   return(
     <div className="app-container">
       {/* Desktop Sidebar */}
-      <div className="desktop-only" style={{ width: 100, height: "100vh", flexShrink: 0, position: "fixed", left: 0, top: 0, zIndex: 500 }}>
+      <div className="desktop-only" style={{ width: 250, height: "100vh", flexShrink: 0, position: "fixed", left: 0, top: 0, zIndex: 500 }}>
         <Sidebar role={role} user={user} active={active} setActive={setActive} onLogout={handleLogout} cartCount={cart.length} notifCount={notifCount}/>
       </div>
       
