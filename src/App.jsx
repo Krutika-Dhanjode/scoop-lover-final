@@ -143,7 +143,24 @@ const CAT_COLOR = {"Big Cup":"#FF6B9D","Boat Cups":"#4ECDC4","Premium Cups":"#9B
 // MOCK DATABASE (simulates MongoDB collections)
 // ============================================================
 function createDB() {
-  const store = {};
+  const STORE_KEY = "scoop_lovers_db";
+  let store = {};
+  
+  try {
+    const saved = localStorage.getItem(STORE_KEY);
+    if (saved) store = JSON.parse(saved);
+  } catch (e) {
+    console.error("Failed to load DB from localStorage", e);
+  }
+
+  const save = () => {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(store));
+    } catch (e) {
+      console.error("Failed to save DB to localStorage", e);
+    }
+  };
+
   return {
     find: (col, query={}) => {
       const docs = store[col] || [];
@@ -158,6 +175,7 @@ function createDB() {
       const _id = col+"_"+Date.now()+"_"+Math.random().toString(36).substr(2,5);
       const newDoc = {...doc, _id};
       store[col].push(newDoc);
+      save();
       return newDoc;
     },
     update: (col, query, update) => {
@@ -166,13 +184,20 @@ function createDB() {
         if(Object.entries(query).every(([k,v])=>d[k]===v)) return {...d,...update};
         return d;
       });
+      save();
     },
     delete: (col, query) => {
       if(!store[col]) return;
       store[col] = store[col].filter(d => !Object.entries(query).every(([k,v])=>d[k]===v));
+      save();
     },
     getAll: (col) => store[col] || [],
-    seed: (col, docs) => { store[col] = docs; }
+    seed: (col, docs) => { 
+      if(!store[col] || store[col].length === 0) {
+        store[col] = docs;
+        save();
+      }
+    }
   };
 }
 
