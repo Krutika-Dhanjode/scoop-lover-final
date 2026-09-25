@@ -738,8 +738,7 @@ function LoginPage({onLogin}){
     <div style={{minHeight:"100vh",background:"linear-gradient(135deg, #1D2A78 0%, #D14578 100%)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,fontFamily:"'Poppins','Segoe UI',sans-serif"}}>
       <div style={{width:"100%",maxWidth:460}}>
         <div style={{textAlign:"center",marginBottom:28}}>
-          <div style={{width:76,height:76,borderRadius:38,background:"white",margin:"0 auto 14px",display:"flex",alignItems:"center",justifyContent:"center",fontSize:38,boxShadow:"0 8px 28px rgba(0,0,0,0.3)"}}>🍦</div>
-          <h1 style={{color:"white",margin:0,fontSize:26,fontWeight:800}}>Scoop Lovers</h1>
+          <img src="/ScoopLovers_images/logo.png" alt="Scoop Lovers Logo" style={{height:100, margin:"0 auto 14px", display:"block", objectFit:"contain"}} />
           <p style={{color:"rgba(255,255,255,0.65)",margin:"4px 0 0",fontSize:13}}>Order Management System</p>
         </div>
         <div style={{background:"white",borderRadius:20,padding:30,boxShadow:"0 20px 60px rgba(0,0,0,0.3)"}}>
@@ -838,8 +837,7 @@ function Sidebar({role,user,active,setActive,onLogout,cartCount,notifCount}){
     <div style={{width:"100%",height:"100vh",flexShrink:0,background:"linear-gradient(180deg,#1D2A78 0%, #D14578 100%)",display:"flex",flexDirection:"column",fontFamily:"'Poppins','Segoe UI',sans-serif",overflow:"hidden"}}>
       <div style={{padding:"22px 18px 14px",borderBottom:"1px solid rgba(255,255,255,0.1)"}}>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
-          <div style={{width:38,height:38,borderRadius:19,background:"white",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🍦</div>
-          <div><div style={{color:"white",fontWeight:800,fontSize:13}}>Scoop Lovers</div></div>
+          <img src="/ScoopLovers_images/logo.png" alt="Scoop Lovers" style={{height: 38, objectFit: "contain", maxWidth:"100%"}} />
         </div>
       </div>
       <div style={{padding:"12px 16px",borderBottom:"1px solid rgba(255,255,255,0.1)"}}>
@@ -1982,8 +1980,7 @@ export default function App(){
         {/* Desktop top navbar */}
         <div className="desktop-header desktop-only">
           <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 16, background: "#1A237E", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🍦</div>
-            <span style={{ fontWeight: 800, fontSize: 16, color: "#1A237E" }}>Scoop Lovers</span>
+            <img src="/ScoopLovers_images/logo.png" alt="Scoop Lovers" style={{height: 40, objectFit: "contain"}} />
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1, justifyContent: "center", maxWidth: 400 }}>
             <input type="text" placeholder="Search products, orders..." style={{ width: "100%", padding: "8px 14px", borderRadius: 8, border: "1.5px solid #E2E8F0", background: "white", color: "#333", fontSize: 13, outline: "none" }} />
@@ -2016,8 +2013,7 @@ export default function App(){
           <div className="mobile-header">
             <button className="hamburger-btn" onClick={() => setIsMobileMenuOpen(true)}>☰</button>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, marginLeft: 12 }}>
-              <div style={{ width: 28, height: 28, borderRadius: 14, background: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15 }}>🍦</div>
-              <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5 }}>Scoop Lovers</span>
+              <img src="/ScoopLovers_images/logo.png" alt="Scoop Lovers" style={{height: 32, objectFit: "contain"}} />
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
               <button onClick={() => setActive("dashboard")} title={user.name} style={{ background: "none", border: "none", color: "#1A237E", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", padding: "4px 8px", borderRadius: 6 }}>👤</button>
