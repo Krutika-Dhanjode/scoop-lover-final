@@ -7,133 +7,159 @@ import "./App.css";
 // SS Rate = Retail Rate (from the PDF "Retail Rate" column)
 // Dist Rate = Dist RATE column from PDF
 // ============================================================
+const IMG = (f) => `/ScoopLovers_images/${f}`;
 const PRODUCTS_DEFAULT = [
-  {id:1,srNo:1,category:"Big Cup",ml:"55 ML",name:"Vanilla",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6},
-  {id:2,srNo:2,category:"Big Cup",ml:"55 ML",name:"Pista",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6},
-  {id:3,srNo:3,category:"Big Cup",ml:"55 ML",name:"Strawberry",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6},
-  {id:4,srNo:4,category:"Boat Cups",ml:"90 ML",name:"American Nuts",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8},
-  {id:5,srNo:5,category:"Boat Cups",ml:"90 ML",name:"Mango",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8},
-  {id:6,srNo:6,category:"Boat Cups",ml:"90 ML",name:"Mawa Badam",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8},
-  {id:7,srNo:7,category:"Boat Cups",ml:"90 ML",name:"Butter Scotch",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8},
+  // ── Big Cup ──
+  {id:1,srNo:1,category:"Big Cup",ml:"55 ML",name:"Vanilla",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,image:IMG("49_Vanilla_Scoop.png")},
+  {id:2,srNo:2,category:"Big Cup",ml:"55 ML",name:"Pista",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,image:IMG("47_Pista_Scoop.png")},
+  {id:3,srNo:3,category:"Big Cup",ml:"55 ML",name:"Strawberry",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,image:IMG("48_Strawberry_Scoop.png")},
+  // ── Boat Cups ──
+  {id:4,srNo:4,category:"Boat Cups",ml:"90 ML",name:"American Nuts",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("55_American_Nuts_Take_Home_Tub.png")},
+  {id:5,srNo:5,category:"Boat Cups",ml:"90 ML",name:"Mango",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("54_Mango_Maha_Raja_Take_Home_Tub.png")},
+  {id:6,srNo:6,category:"Boat Cups",ml:"90 ML",name:"Mawa Badam",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("19_Mawa_Malai_Kulfi.png")},
+  {id:7,srNo:7,category:"Boat Cups",ml:"90 ML",name:"Butter Scotch",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("57_Butter_Scotch_Take_Home_Tub.png")},
   {id:8,srNo:8,category:"Boat Cups",ml:"90 ML",name:"Tutti Fruiti",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8},
-  {id:9,srNo:9,category:"Boat Cups",ml:"90 ML",name:"Chocolate Fudge",mrp:20,pcs:12,boxMrp:240,retailMargin:0.25,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8},
-  {id:10,srNo:10,category:"Premium Cups",ml:"100 ML",name:"Chocolate Chips",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8},
-  {id:11,srNo:11,category:"Premium Cups",ml:"100 ML",name:"Dryfruit Malai Kulfi",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8},
-  {id:12,srNo:12,category:"Premium Cups",ml:"100 ML",name:"Fruit Cocktail",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8},
-  {id:13,srNo:13,category:"Premium Cups",ml:"100 ML",name:"Raj Bhog",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8},
-  {id:14,srNo:14,category:"Premium Cups",ml:"100 ML",name:"Sitafal",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8},
-  {id:15,srNo:15,category:"Premium Cups",ml:"100 ML",name:"Tender Coconut",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8},
-  {id:16,srNo:16,category:"Premium Cups",ml:"100 ML",name:"Choco Almond",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8},
-  {id:17,srNo:17,category:"Premium Cups",ml:"100 ML",name:"Belgium Chocolate",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8},
+  {id:9,srNo:9,category:"Boat Cups",ml:"90 ML",name:"Chocolate Fudge",mrp:20,pcs:12,boxMrp:240,retailMargin:0.25,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("68_Chocolate_Fudge_Party_Pack.png")},
+  // ── Premium Cups ──
+  {id:10,srNo:10,category:"Premium Cups",ml:"100 ML",name:"Chocolate Chips",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,image:IMG("02_Choco_Chips.png")},
+  {id:11,srNo:11,category:"Premium Cups",ml:"100 ML",name:"Dryfruit Malai Kulfi",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,image:IMG("01_Dry_Fruit_Malai.png")},
+  {id:12,srNo:12,category:"Premium Cups",ml:"100 ML",name:"Fruit Cocktail",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,image:IMG("03_Fruit_Cocktail.png")},
+  {id:13,srNo:13,category:"Premium Cups",ml:"100 ML",name:"Raj Bhog",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,image:IMG("04_Rajbhog.png")},
+  {id:14,srNo:14,category:"Premium Cups",ml:"100 ML",name:"Sitafal",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,image:IMG("05_Sitafal.png")},
+  {id:15,srNo:15,category:"Premium Cups",ml:"100 ML",name:"Tender Coconut",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,image:IMG("06_Tender_Coconut.png")},
+  // id:16 — Choco Almond cup/tub → 07_Choco_Almond.png (cup variant)
+  {id:16,srNo:16,category:"Premium Cups",ml:"100 ML",name:"Choco Almond",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,image:IMG("07_Choco_Almond.png")},
+  {id:17,srNo:17,category:"Premium Cups",ml:"100 ML",name:"Belgium Chocolate",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,image:IMG("08_Belgium_Chocolate.png")},
+  // ── Small Cup ──
   {id:18,srNo:18,category:"Small Cup",ml:"30 ML",name:"Vanilla",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.09,distMargin:0.12,distRate:116.16,unitInCrate:8},
   {id:19,srNo:19,category:"Small Cup",ml:"30 ML",name:"Pista",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.09,distMargin:0.12,distRate:116.16,unitInCrate:8},
-  {id:20,srNo:20,category:"Small Cone",ml:"50 ML",name:"Choco Vanilla",mrp:10,pcs:36,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.12,distRate:267.22,unitInCrate:6},
-  {id:21,srNo:21,category:"Small Cone",ml:"50 ML",name:"Pista",mrp:10,pcs:36,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.12,distRate:267.22,unitInCrate:6},
-  {id:22,srNo:22,category:"Small Cone",ml:"50 ML",name:"Butter Scotch",mrp:10,pcs:36,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.12,distRate:267.22,unitInCrate:6},
-  {id:23,srNo:23,category:"Small Cone",ml:"50 ML",name:"Chocolate",mrp:10,pcs:36,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.12,distRate:267.22,unitInCrate:6},
-  {id:24,srNo:24,category:"Medium Cone",ml:"80 ML",name:"Butter Scotch",mrp:10,pcs:24,boxMrp:240,retailMargin:0.15,ssRate:208.00,distMargin:0.12,distRate:185.86,unitInCrate:6},
-  {id:25,srNo:25,category:"Medium Cone",ml:"80 ML",name:"Badam",mrp:10,pcs:24,boxMrp:240,retailMargin:0.15,ssRate:208.00,distMargin:0.12,distRate:185.86,unitInCrate:6},
-  {id:26,srNo:26,category:"Medium Cone",ml:"80 ML",name:"Mango",mrp:10,pcs:24,boxMrp:240,retailMargin:0.15,ssRate:208.00,distMargin:0.12,distRate:185.86,unitInCrate:6},
-  {id:27,srNo:27,category:"Big Cone",ml:"120 ML",name:"Vanilla",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.13,distRate:264.70,unitInCrate:6},
-  {id:28,srNo:28,category:"Big Cone",ml:"120 ML",name:"Strawberry",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.13,distRate:264.70,unitInCrate:6},
-  {id:29,srNo:29,category:"Big Cone",ml:"120 ML",name:"Pista",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.13,distRate:264.70,unitInCrate:6},
-  {id:30,srNo:30,category:"Big Cone",ml:"120 ML",name:"Chocolate",mrp:30,pcs:18,boxMrp:540,retailMargin:0.29,ssRate:417.82,distMargin:0.14,distRate:366.51,unitInCrate:6},
-  {id:31,srNo:31,category:"Big Cone",ml:"120 ML",name:"Butter Scotch",mrp:30,pcs:18,boxMrp:540,retailMargin:0.29,ssRate:417.82,distMargin:0.14,distRate:366.51,unitInCrate:6},
-  {id:32,srNo:32,category:"Big Cone",ml:"120 ML",name:"Double Chocolate",mrp:40,pcs:18,boxMrp:720,retailMargin:0.29,ssRate:557.10,distMargin:0.14,distRate:488.69,unitInCrate:6},
-  {id:33,srNo:33,category:"Ice Candy",ml:"40 ML",name:"Orange Blast",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.00,distMargin:0.12,distRate:116.16,unitInCrate:6},
-  {id:34,srNo:34,category:"Ice Candy",ml:"40 ML",name:"Mango Blast",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.00,distMargin:0.12,distRate:116.16,unitInCrate:6},
-  {id:35,srNo:35,category:"Ice Candy",ml:"40 ML",name:"Kala Khatta",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.00,distMargin:0.12,distRate:116.16,unitInCrate:6},
-  {id:36,srNo:36,category:"Kulfi",ml:"25 ML",name:"Mini Mava",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.00,distMargin:0.12,distRate:116.16,unitInCrate:6},
-  {id:37,srNo:37,category:"Kulfi",ml:"35 ML",name:"Mawa",mrp:10,pcs:30,boxMrp:300,retailMargin:0.25,ssRate:240.00,distMargin:0.12,distRate:213.78,unitInCrate:6},
-  {id:38,srNo:38,category:"Kulfi",ml:"35 ML",name:"Pista",mrp:10,pcs:30,boxMrp:300,retailMargin:0.25,ssRate:240.00,distMargin:0.12,distRate:213.78,unitInCrate:6},
-  {id:39,srNo:39,category:"Kulfi",ml:"35 ML",name:"Gulkand",mrp:10,pcs:30,boxMrp:300,retailMargin:0.25,ssRate:240.00,distMargin:0.12,distRate:213.78,unitInCrate:6},
-  {id:40,srNo:40,category:"Premium Kulfi",ml:"70 ML",name:"Raj Bhog",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.14,distRate:264.70,unitInCrate:6},
-  {id:41,srNo:41,category:"Premium Kulfi",ml:"70 ML",name:"Badam Masti",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.14,distRate:264.70,unitInCrate:6},
-  {id:42,srNo:42,category:"Premium Kulfi",ml:"70 ML",name:"Shahi Pista",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.14,distRate:264.70,unitInCrate:12},
-  {id:43,srNo:43,category:"Punjabi Kulfi",ml:"55 ML",name:"Rabdi",mrp:30,pcs:10,boxMrp:300,retailMargin:0.24,ssRate:241.40,distMargin:0.14,distRate:211.76,unitInCrate:12},
-  {id:44,srNo:44,category:"Punjabi Kulfi",ml:"55 ML",name:"Dryfruit",mrp:30,pcs:10,boxMrp:300,retailMargin:0.24,ssRate:241.40,distMargin:0.14,distRate:211.76,unitInCrate:12},
-  {id:45,srNo:45,category:"Punjabi Kulfi",ml:"55 ML",name:"Punjabi",mrp:30,pcs:10,boxMrp:300,retailMargin:0.24,ssRate:241.40,distMargin:0.14,distRate:211.76,unitInCrate:12},
-  {id:46,srNo:46,category:"Punjabi Kulfi",ml:"55 ML",name:"Anjeer Badam",mrp:30,pcs:10,boxMrp:300,retailMargin:0.24,ssRate:241.40,distMargin:0.14,distRate:211.76,unitInCrate:6},
-  {id:47,srNo:47,category:"Choco Blast",ml:"40 ML",name:"Mini Crunchy Chocobar",mrp:10,pcs:30,boxMrp:300,retailMargin:0.20,ssRate:250.00,distMargin:0.12,distRate:222.68,unitInCrate:6},
-  {id:48,srNo:48,category:"Choco Blast",ml:"70 ML",name:"Big Crunchy",mrp:20,pcs:18,boxMrp:360,retailMargin:0.30,ssRate:278.00,distMargin:0.14,distRate:344.34,unitInCrate:6},
-  {id:49,srNo:49,category:"Choco Blast",ml:"70 ML",name:"Choco Nutty",mrp:20,pcs:18,boxMrp:360,retailMargin:0.30,ssRate:278.00,distMargin:0.14,distRate:344.34,unitInCrate:6},
-  {id:50,srNo:50,category:"Choco Blast",ml:"70 ML",name:"Choco Butter Bite",mrp:20,pcs:18,boxMrp:360,retailMargin:0.30,ssRate:278.00,distMargin:0.14,distRate:344.34,unitInCrate:6},
-  {id:51,srNo:51,category:"Choco Blast",ml:"70 ML",name:"Choco Feast",mrp:30,pcs:18,boxMrp:540,retailMargin:0.30,ssRate:417.00,distMargin:0.14,distRate:366.51,unitInCrate:6},
-  {id:52,srNo:52,category:"Choco Blast",ml:"70 ML",name:"Choco Almond",mrp:30,pcs:18,boxMrp:540,retailMargin:0.30,ssRate:417.00,distMargin:0.14,distRate:366.51,unitInCrate:8},
-  {id:53,srNo:53,category:"Matka",ml:"90 ML",name:"Rajwadi Matka Kulfi",mrp:20,pcs:12,boxMrp:240,retailMargin:0.15,ssRate:208.00,distMargin:0.12,distRate:185.86,unitInCrate:8},
+  // ── Small Cone ──
+  {id:20,srNo:20,category:"Small Cone",ml:"50 ML",name:"Choco Vanilla",mrp:10,pcs:36,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.12,distRate:267.22,unitInCrate:6,image:IMG("09_Choco_Vanilla_Cone.png")},
+  {id:21,srNo:21,category:"Small Cone",ml:"50 ML",name:"Pista",mrp:10,pcs:36,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.12,distRate:267.22,unitInCrate:6,image:IMG("10_Pista_Cone.png")},
+  {id:22,srNo:22,category:"Small Cone",ml:"50 ML",name:"Butter Scotch",mrp:10,pcs:36,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.12,distRate:267.22,unitInCrate:6,image:IMG("11_Butterscotch_Cone.png")},
+  {id:23,srNo:23,category:"Small Cone",ml:"50 ML",name:"Chocolate",mrp:10,pcs:36,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.12,distRate:267.22,unitInCrate:6,image:IMG("12_Chocolate_Cone.png")},
+  // ── Medium Cone ──
+  {id:24,srNo:24,category:"Medium Cone",ml:"80 ML",name:"Butter Scotch",mrp:10,pcs:24,boxMrp:240,retailMargin:0.15,ssRate:208.00,distMargin:0.12,distRate:185.86,unitInCrate:6,image:IMG("23_Butterscotch_Medium_Cone.png")},
+  {id:25,srNo:25,category:"Medium Cone",ml:"80 ML",name:"Badam",mrp:10,pcs:24,boxMrp:240,retailMargin:0.15,ssRate:208.00,distMargin:0.12,distRate:185.86,unitInCrate:6,image:IMG("21_Badam_Medium_Cone.png")},
+  {id:26,srNo:26,category:"Medium Cone",ml:"80 ML",name:"Mango",mrp:10,pcs:24,boxMrp:240,retailMargin:0.15,ssRate:208.00,distMargin:0.12,distRate:185.86,unitInCrate:6,image:IMG("22_Mango_Medium_Cone.png")},
+  // ── Big Cone ──
+  {id:27,srNo:27,category:"Big Cone",ml:"120 ML",name:"Vanilla",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.13,distRate:264.70,unitInCrate:6,image:IMG("24_Choco_Vanilla_Big_Cone.png")},
+  {id:28,srNo:28,category:"Big Cone",ml:"120 ML",name:"Strawberry",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.13,distRate:264.70,unitInCrate:6,image:IMG("25_Strawberry_Big_Cone.png")},
+  {id:29,srNo:29,category:"Big Cone",ml:"120 ML",name:"Pista",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.13,distRate:264.70,unitInCrate:6,image:IMG("26_Pista_Big_Cone.png")},
+  {id:30,srNo:30,category:"Big Cone",ml:"120 ML",name:"Chocolate",mrp:30,pcs:18,boxMrp:540,retailMargin:0.29,ssRate:417.82,distMargin:0.14,distRate:366.51,unitInCrate:6,image:IMG("28_Chocolate_Big_Cone.png")},
+  {id:31,srNo:31,category:"Big Cone",ml:"120 ML",name:"Butter Scotch",mrp:30,pcs:18,boxMrp:540,retailMargin:0.29,ssRate:417.82,distMargin:0.14,distRate:366.51,unitInCrate:6,image:IMG("27_Butterscotch_Big_Cone.png")},
+  {id:32,srNo:32,category:"Big Cone",ml:"120 ML",name:"Double Chocolate",mrp:40,pcs:18,boxMrp:720,retailMargin:0.29,ssRate:557.10,distMargin:0.14,distRate:488.69,unitInCrate:6,image:IMG("29_Double_Chocolate_Big_Cone.png")},
+  // ── Ice Candy ──
+  {id:33,srNo:33,category:"Ice Candy",ml:"40 ML",name:"Orange Blast",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.00,distMargin:0.12,distRate:116.16,unitInCrate:6,image:IMG("34_Orange_Blast_Ice_Candy.png")},
+  {id:34,srNo:34,category:"Ice Candy",ml:"40 ML",name:"Mango Blast",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.00,distMargin:0.12,distRate:116.16,unitInCrate:6,image:IMG("35_Mango_Blast_Ice_Candy.png")},
+  {id:35,srNo:35,category:"Ice Candy",ml:"40 ML",name:"Kala Khatta",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.00,distMargin:0.12,distRate:116.16,unitInCrate:6,image:IMG("33_Kala_Khatta_Ice_Candy.png")},
+  // ── Kulfi ──
+  {id:36,srNo:36,category:"Kulfi",ml:"25 ML",name:"Mini Mava",mrp:5,pcs:30,boxMrp:150,retailMargin:0.16,ssRate:130.00,distMargin:0.12,distRate:116.16,unitInCrate:6,image:IMG("20_Mini_Mawa_Kulfi.png")},
+  {id:37,srNo:37,category:"Kulfi",ml:"35 ML",name:"Mawa",mrp:10,pcs:30,boxMrp:300,retailMargin:0.25,ssRate:240.00,distMargin:0.12,distRate:213.78,unitInCrate:6,image:IMG("19_Mawa_Malai_Kulfi.png")},
+  {id:38,srNo:38,category:"Kulfi",ml:"35 ML",name:"Pista",mrp:10,pcs:30,boxMrp:300,retailMargin:0.25,ssRate:240.00,distMargin:0.12,distRate:213.78,unitInCrate:6,image:IMG("17_Pista_Kulfi.png")},
+  {id:39,srNo:39,category:"Kulfi",ml:"35 ML",name:"Gulkand",mrp:10,pcs:30,boxMrp:300,retailMargin:0.25,ssRate:240.00,distMargin:0.12,distRate:213.78,unitInCrate:6,image:IMG("18_Gulkand_Kulfi.png")},
+  // ── Premium Kulfi ──
+  {id:40,srNo:40,category:"Premium Kulfi",ml:"70 ML",name:"Raj Bhog",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.14,distRate:264.70,unitInCrate:6,image:IMG("31_Rajbhog_Premium_Kulfi.png")},
+  {id:41,srNo:41,category:"Premium Kulfi",ml:"70 ML",name:"Badam Masti",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.14,distRate:264.70,unitInCrate:6,image:IMG("32_Badam_Masti_Premium_Kulfi.png")},
+  {id:42,srNo:42,category:"Premium Kulfi",ml:"70 ML",name:"Shahi Pista",mrp:20,pcs:18,boxMrp:360,retailMargin:0.20,ssRate:300.00,distMargin:0.14,distRate:264.70,unitInCrate:12,image:IMG("30_Shahi_Pista_Premium_Kulfi.png")},
+  // ── Punjabi Kulfi ──
+  {id:43,srNo:43,category:"Punjabi Kulfi",ml:"55 ML",name:"Rabdi",mrp:30,pcs:10,boxMrp:300,retailMargin:0.24,ssRate:241.40,distMargin:0.14,distRate:211.76,unitInCrate:12,image:IMG("16_Rabdi_Kulfi.png")},
+  {id:44,srNo:44,category:"Punjabi Kulfi",ml:"55 ML",name:"Dryfruit",mrp:30,pcs:10,boxMrp:300,retailMargin:0.24,ssRate:241.40,distMargin:0.14,distRate:211.76,unitInCrate:12,image:IMG("15_Dryfruit_Kulfi.png")},
+  {id:45,srNo:45,category:"Punjabi Kulfi",ml:"55 ML",name:"Punjabi",mrp:30,pcs:10,boxMrp:300,retailMargin:0.24,ssRate:241.40,distMargin:0.14,distRate:211.76,unitInCrate:12,image:IMG("14_Punjabi_Kulfi.png")},
+  {id:46,srNo:46,category:"Punjabi Kulfi",ml:"55 ML",name:"Anjeer Badam",mrp:30,pcs:10,boxMrp:300,retailMargin:0.24,ssRate:241.40,distMargin:0.14,distRate:211.76,unitInCrate:6,image:IMG("13_Anjeer_Badam_Punjabi_Kulfi.png")},
+  // ── Choco Blast ──
+  {id:47,srNo:47,category:"Choco Blast",ml:"40 ML",name:"Mini Crunchy Chocobar",mrp:10,pcs:30,boxMrp:300,retailMargin:0.20,ssRate:250.00,distMargin:0.12,distRate:222.68,unitInCrate:6,image:IMG("36_Mini_Crunchy_Chocobar.png")},
+  {id:48,srNo:48,category:"Choco Blast",ml:"70 ML",name:"Big Crunchy",mrp:20,pcs:18,boxMrp:360,retailMargin:0.30,ssRate:278.00,distMargin:0.14,distRate:344.34,unitInCrate:6,image:IMG("39_Big_Crunchy.png")},
+  {id:49,srNo:49,category:"Choco Blast",ml:"70 ML",name:"Choco Nutty",mrp:20,pcs:18,boxMrp:360,retailMargin:0.30,ssRate:278.00,distMargin:0.14,distRate:344.34,unitInCrate:6,image:IMG("37_Choco_Nutty.png")},
+  {id:50,srNo:50,category:"Choco Blast",ml:"70 ML",name:"Choco Butter Bite",mrp:20,pcs:18,boxMrp:360,retailMargin:0.30,ssRate:278.00,distMargin:0.14,distRate:344.34,unitInCrate:6,image:IMG("38_Choco_Butter_Bite.png")},
+  {id:51,srNo:51,category:"Choco Blast",ml:"70 ML",name:"Choco Feast",mrp:30,pcs:18,boxMrp:540,retailMargin:0.30,ssRate:417.00,distMargin:0.14,distRate:366.51,unitInCrate:6,image:IMG("41_Choco_Feast.png")},
+  // id:52 — Choco Almond BAR (Choco Blast) → 40_Choco_Almond_Bar.png
+  {id:52,srNo:52,category:"Choco Blast",ml:"70 ML",name:"Choco Almond",mrp:30,pcs:18,boxMrp:540,retailMargin:0.30,ssRate:417.00,distMargin:0.14,distRate:366.51,unitInCrate:8,image:IMG("40_Choco_Almond_Bar.png")},
+  // ── Matka ──
+  {id:53,srNo:53,category:"Matka",ml:"90 ML",name:"Rajwadi Matka Kulfi",mrp:20,pcs:12,boxMrp:240,retailMargin:0.15,ssRate:208.00,distMargin:0.12,distRate:185.86,unitInCrate:8,image:IMG("44_Rajwadi_Matka.png")},
   {id:54,srNo:54,category:"Matka",ml:"100 ML",name:"Shahi Matka",mrp:50,pcs:6,boxMrp:300,retailMargin:0.30,ssRate:232.00,distMargin:0.14,distRate:203.61,unitInCrate:8},
+  // ── Sunday ──
   {id:55,srNo:55,category:"Sunday",ml:"60 ML",name:"Mix Fruit",mrp:10,pcs:12,boxMrp:120,retailMargin:0.16,ssRate:103.45,distMargin:0.12,distRate:92.86,unitInCrate:6},
-  {id:56,srNo:56,category:"Sunday",ml:"100 ML",name:"Chocolate Ripple",mrp:20,pcs:12,boxMrp:240,retailMargin:0.25,ssRate:193.00,distMargin:0.14,distRate:169.40,unitInCrate:6},
-  {id:57,srNo:57,category:"Sunday",ml:"100 ML",name:"Mango Ripple",mrp:20,pcs:12,boxMrp:240,retailMargin:0.25,ssRate:193.00,distMargin:0.14,distRate:169.40,unitInCrate:6},
-  {id:58,srNo:58,category:"Sunday",ml:"125 ML",name:"Rajbhog",mrp:40,pcs:6,boxMrp:240,retailMargin:0.30,ssRate:185.69,distMargin:0.14,distRate:162.89,unitInCrate:6},
+  {id:56,srNo:56,category:"Sunday",ml:"100 ML",name:"Chocolate Ripple",mrp:20,pcs:12,boxMrp:240,retailMargin:0.25,ssRate:193.00,distMargin:0.14,distRate:169.40,unitInCrate:6,image:IMG("51_Chocolate_Ripple_Sundae_Tub.png")},
+  {id:57,srNo:57,category:"Sunday",ml:"100 ML",name:"Mango Ripple",mrp:20,pcs:12,boxMrp:240,retailMargin:0.25,ssRate:193.00,distMargin:0.14,distRate:169.40,unitInCrate:6,image:IMG("50_Mango_Ripple_Sundae_Tub.png")},
+  {id:58,srNo:58,category:"Sunday",ml:"125 ML",name:"Rajbhog",mrp:40,pcs:6,boxMrp:240,retailMargin:0.30,ssRate:185.69,distMargin:0.14,distRate:162.89,unitInCrate:6,image:IMG("04_Rajbhog.png")},
   {id:59,srNo:59,category:"Sunday",ml:"125 ML",name:"American Dryfruits",mrp:40,pcs:6,boxMrp:240,retailMargin:0.30,ssRate:185.69,distMargin:0.14,distRate:162.89,unitInCrate:6},
   {id:60,srNo:60,category:"Sunday",ml:"125 ML",name:"Fully Loaded",mrp:40,pcs:6,boxMrp:240,retailMargin:0.30,ssRate:185.69,distMargin:0.14,distRate:162.89,unitInCrate:8},
-  {id:61,srNo:61,category:"Novelties",ml:"80 ML",name:"Sandwich",mrp:25,pcs:9,boxMrp:225,retailMargin:0.25,ssRate:180.00,distMargin:0.12,distRate:160.71,unitInCrate:8},
-  {id:62,srNo:62,category:"Novelties",ml:"120 ML",name:"Cassata",mrp:50,pcs:6,boxMrp:300,retailMargin:0.30,ssRate:230.77,distMargin:0.12,distRate:206.04,unitInCrate:8},
-  {id:63,srNo:63,category:"Roll Cut",ml:"100 ML",name:"Mawa Malai",mrp:40,pcs:6,boxMrp:240,retailMargin:0.30,ssRate:184.62,distMargin:0.14,distRate:161.94,unitInCrate:8},
-  {id:64,srNo:64,category:"Roll Cut",ml:"100 ML",name:"Kesar Pista",mrp:40,pcs:6,boxMrp:240,retailMargin:0.30,ssRate:184.62,distMargin:0.14,distRate:161.94,unitInCrate:8},
-  {id:65,srNo:65,category:"Family Pack",ml:"700 ML",name:"Vanilla",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:79.97,distMargin:0.14,distRate:70.15,unitInCrate:30},
-  {id:66,srNo:66,category:"Family Pack",ml:"700 ML",name:"Strawberry",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:79.97,distMargin:0.14,distRate:70.15,unitInCrate:30},
+  // ── Novelties ──
+  {id:61,srNo:61,category:"Novelties",ml:"80 ML",name:"Sandwich",mrp:25,pcs:9,boxMrp:225,retailMargin:0.25,ssRate:180.00,distMargin:0.12,distRate:160.71,unitInCrate:8,image:IMG("42_Sandwich.png")},
+  {id:62,srNo:62,category:"Novelties",ml:"120 ML",name:"Cassata",mrp:50,pcs:6,boxMrp:300,retailMargin:0.30,ssRate:230.77,distMargin:0.12,distRate:206.04,unitInCrate:8,image:IMG("43_Cassatta.png")},
+  // ── Roll Cut ──
+  {id:63,srNo:63,category:"Roll Cut",ml:"100 ML",name:"Mawa Malai",mrp:40,pcs:6,boxMrp:240,retailMargin:0.30,ssRate:184.62,distMargin:0.14,distRate:161.94,unitInCrate:8,image:IMG("45_Mawa_Malai_Roll_Cut.png")},
+  {id:64,srNo:64,category:"Roll Cut",ml:"100 ML",name:"Kesar Pista",mrp:40,pcs:6,boxMrp:240,retailMargin:0.30,ssRate:184.62,distMargin:0.14,distRate:161.94,unitInCrate:8,image:IMG("46_Kesar_Pista_Roll_Cut.png")},
+  // ── Family Pack ──
+  {id:65,srNo:65,category:"Family Pack",ml:"700 ML",name:"Vanilla",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:79.97,distMargin:0.14,distRate:70.15,unitInCrate:30,image:IMG("67_Vanilla_Family_Pack.png")},
+  {id:66,srNo:66,category:"Family Pack",ml:"700 ML",name:"Strawberry",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:79.97,distMargin:0.14,distRate:70.15,unitInCrate:30,image:IMG("65_Strawberry_Family_Pack.png")},
   {id:67,srNo:67,category:"Family Pack",ml:"700 ML",name:"Badam",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:79.97,distMargin:0.14,distRate:70.15,unitInCrate:30},
   {id:68,srNo:68,category:"Family Pack",ml:"700 ML",name:"Pista",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:79.97,distMargin:0.14,distRate:70.15,unitInCrate:30},
   {id:69,srNo:69,category:"Family Pack",ml:"700 ML",name:"Tutti Frutti",mrp:130,pcs:1,boxMrp:130,retailMargin:0.30,ssRate:99.97,distMargin:0.14,distRate:87.70,unitInCrate:30},
-  {id:70,srNo:70,category:"Family Pack",ml:"700 ML",name:"Butter Scotch",mrp:130,pcs:1,boxMrp:130,retailMargin:0.30,ssRate:99.97,distMargin:0.14,distRate:87.70,unitInCrate:30},
+  {id:70,srNo:70,category:"Family Pack",ml:"700 ML",name:"Butter Scotch",mrp:130,pcs:1,boxMrp:130,retailMargin:0.30,ssRate:99.97,distMargin:0.14,distRate:87.70,unitInCrate:30,image:IMG("57_Butter_Scotch_Take_Home_Tub.png")},
   {id:71,srNo:71,category:"Family Pack",ml:"700 ML",name:"Mango",mrp:130,pcs:1,boxMrp:130,retailMargin:0.30,ssRate:99.97,distMargin:0.14,distRate:87.70,unitInCrate:30},
-  {id:72,srNo:72,category:"Family Pack",ml:"700 ML",name:"Chocolate Fudge",mrp:130,pcs:1,boxMrp:130,retailMargin:0.30,ssRate:99.97,distMargin:0.14,distRate:87.70,unitInCrate:30},
+  {id:72,srNo:72,category:"Family Pack",ml:"700 ML",name:"Chocolate Fudge",mrp:130,pcs:1,boxMrp:130,retailMargin:0.30,ssRate:99.97,distMargin:0.14,distRate:87.70,unitInCrate:30,image:IMG("66_Chocolate_Fudge_Family_Pack.png")},
   {id:73,srNo:73,category:"Family Pack",ml:"700 ML",name:"Kaju KishMish",mrp:140,pcs:1,boxMrp:140,retailMargin:0.30,ssRate:107.66,distMargin:0.14,distRate:94.44,unitInCrate:30},
-  {id:74,srNo:74,category:"Family Pack",ml:"700 ML",name:"Chocolate Chips",mrp:140,pcs:1,boxMrp:140,retailMargin:0.30,ssRate:107.66,distMargin:0.14,distRate:94.44,unitInCrate:30},
-  {id:75,srNo:75,category:"Family Pack",ml:"700 ML",name:"Tender Coconut",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30},
-  {id:76,srNo:76,category:"Family Pack",ml:"700 ML",name:"American Nuts",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30},
-  {id:77,srNo:77,category:"Family Pack",ml:"700 ML",name:"Dryfruit Malai Kulfi",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30},
-  {id:78,srNo:78,category:"Family Pack",ml:"700 ML",name:"Rajbhog",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30},
-  {id:79,srNo:79,category:"Family Pack",ml:"700 ML",name:"Kesar Pista",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30},
-  {id:80,srNo:80,category:"Family Pack",ml:"700 ML",name:"Sitaphal",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:25},
+  {id:74,srNo:74,category:"Family Pack",ml:"700 ML",name:"Chocolate Chips",mrp:140,pcs:1,boxMrp:140,retailMargin:0.30,ssRate:107.66,distMargin:0.14,distRate:94.44,unitInCrate:30,image:IMG("02_Choco_Chips.png")},
+  {id:75,srNo:75,category:"Family Pack",ml:"700 ML",name:"Tender Coconut",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30,image:IMG("06_Tender_Coconut.png")},
+  {id:76,srNo:76,category:"Family Pack",ml:"700 ML",name:"American Nuts",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30,image:IMG("60_American_Nuts_Family_Pack.png")},
+  {id:77,srNo:77,category:"Family Pack",ml:"700 ML",name:"Dryfruit Malai Kulfi",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30,image:IMG("63_Dry_Fruit_Malai_Kulfi_Family_Pack.png")},
+  {id:78,srNo:78,category:"Family Pack",ml:"700 ML",name:"Rajbhog",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30,image:IMG("61_Rajbhog_Family_Pack.png")},
+  {id:79,srNo:79,category:"Family Pack",ml:"700 ML",name:"Kesar Pista",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:30,image:IMG("62_Kesar_Pista_Family_Pack.png")},
+  {id:80,srNo:80,category:"Family Pack",ml:"700 ML",name:"Sitaphal",mrp:150,pcs:1,boxMrp:150,retailMargin:0.30,ssRate:115.36,distMargin:0.14,distRate:101.20,unitInCrate:25,image:IMG("05_Sitafal.png")},
+  // ── Party Pack ──
   {id:81,srNo:81,category:"Party Pack",ml:"1250 ML",name:"Vanilla",mrp:140,pcs:1,boxMrp:140,retailMargin:0.30,ssRate:107.66,distMargin:0.14,distRate:94.44,unitInCrate:25},
   {id:82,srNo:82,category:"Party Pack",ml:"1250 ML",name:"Strawberry",mrp:140,pcs:1,boxMrp:140,retailMargin:0.30,ssRate:107.66,distMargin:0.14,distRate:94.44,unitInCrate:25},
   {id:83,srNo:83,category:"Party Pack",ml:"1250 ML",name:"Pista",mrp:140,pcs:1,boxMrp:140,retailMargin:0.30,ssRate:107.66,distMargin:0.14,distRate:94.44,unitInCrate:25},
   {id:84,srNo:84,category:"Party Pack",ml:"1250 ML",name:"Mango",mrp:170,pcs:1,boxMrp:170,retailMargin:0.30,ssRate:130.74,distMargin:0.14,distRate:114.69,unitInCrate:25},
   {id:85,srNo:85,category:"Party Pack",ml:"1250 ML",name:"Butter Scotch",mrp:170,pcs:1,boxMrp:170,retailMargin:0.30,ssRate:130.74,distMargin:0.14,distRate:114.69,unitInCrate:25},
   {id:86,srNo:86,category:"Party Pack",ml:"1250 ML",name:"Chocolate",mrp:170,pcs:1,boxMrp:170,retailMargin:0.30,ssRate:130.74,distMargin:0.14,distRate:114.69,unitInCrate:25},
-  {id:87,srNo:87,category:"Party Pack",ml:"1250 ML",name:"Dryfruit Malai Kulfi",mrp:220,pcs:1,boxMrp:220,retailMargin:0.30,ssRate:169.23,distMargin:0.14,distRate:148.45,unitInCrate:25},
-  {id:88,srNo:88,category:"Party Pack",ml:"1250 ML",name:"American Nuts",mrp:220,pcs:1,boxMrp:220,retailMargin:0.30,ssRate:169.23,distMargin:0.14,distRate:148.45,unitInCrate:25},
-  {id:89,srNo:89,category:"Party Pack",ml:"1250 ML",name:"Rajbhog",mrp:220,pcs:1,boxMrp:220,retailMargin:0.30,ssRate:169.23,distMargin:0.14,distRate:148.45,unitInCrate:6},
-  {id:90,srNo:90,category:"Catering Pack",ml:"5 LTR",name:"Vanilla",mrp:450,pcs:1,boxMrp:450,retailMargin:0.35,ssRate:333.26,distMargin:0.14,distRate:292.34,unitInCrate:6},
-  {id:91,srNo:91,category:"Catering Pack",ml:"5 LTR",name:"Strawberry",mrp:450,pcs:1,boxMrp:450,retailMargin:0.35,ssRate:333.26,distMargin:0.14,distRate:292.34,unitInCrate:6},
-  {id:92,srNo:92,category:"Catering Pack",ml:"5 LTR",name:"Pista",mrp:450,pcs:1,boxMrp:450,retailMargin:0.35,ssRate:333.26,distMargin:0.14,distRate:292.34,unitInCrate:6},
-  {id:93,srNo:93,category:"Catering Pack",ml:"5 LTR",name:"Mango",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.39,distMargin:0.14,distRate:422.28,unitInCrate:6},
-  {id:94,srNo:94,category:"Catering Pack",ml:"5 LTR",name:"Butter Scotch",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.39,distMargin:0.14,distRate:422.28,unitInCrate:6},
-  {id:95,srNo:95,category:"Catering Pack",ml:"5 LTR",name:"Chocolate",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.39,distMargin:0.14,distRate:422.28,unitInCrate:6},
-  {id:96,srNo:96,category:"Bulk Pack",ml:"4 LTR",name:"Vanilla",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6},
-  {id:97,srNo:97,category:"Bulk Pack",ml:"4 LTR",name:"Pista",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6},
-  {id:98,srNo:98,category:"Bulk Pack",ml:"4 LTR",name:"Strawberry",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6},
-  {id:99,srNo:99,category:"Bulk Pack",ml:"4 LTR",name:"Badam",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6},
-  {id:100,srNo:100,category:"Bulk Pack",ml:"4 LTR",name:"Pineapple",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6},
-  {id:101,srNo:101,category:"Bulk Pack",ml:"4 LTR",name:"Mango",mrp:500,pcs:1,boxMrp:500,retailMargin:0.35,ssRate:370.37,distMargin:0.14,distRate:324.89,unitInCrate:6},
-  {id:102,srNo:102,category:"Bulk Pack",ml:"4 LTR",name:"Butterscotch",mrp:500,pcs:1,boxMrp:500,retailMargin:0.35,ssRate:370.37,distMargin:0.14,distRate:324.89,unitInCrate:6},
-  {id:103,srNo:103,category:"Bulk Pack",ml:"4 LTR",name:"Chocolate",mrp:500,pcs:1,boxMrp:500,retailMargin:0.35,ssRate:370.37,distMargin:0.14,distRate:324.89,unitInCrate:6},
-  {id:104,srNo:104,category:"Bulk Pack",ml:"4 LTR",name:"Tutti Frutti",mrp:500,pcs:1,boxMrp:500,retailMargin:0.35,ssRate:370.37,distMargin:0.14,distRate:324.89,unitInCrate:6},
-  {id:105,srNo:105,category:"Bulk Pack",ml:"4 LTR",name:"Choco Chips",mrp:600,pcs:1,boxMrp:600,retailMargin:0.35,ssRate:444.44,distMargin:0.14,distRate:389.86,unitInCrate:6},
-  {id:106,srNo:106,category:"Bulk Pack",ml:"4 LTR",name:"Coffee Co",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.48,distMargin:0.14,distRate:422.35,unitInCrate:6},
-  {id:107,srNo:107,category:"Bulk Pack",ml:"4 LTR",name:"Black Current",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.48,distMargin:0.14,distRate:422.35,unitInCrate:6},
-  {id:108,srNo:108,category:"Bulk Pack",ml:"4 LTR",name:"Gulkand",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.48,distMargin:0.14,distRate:422.35,unitInCrate:6},
-  {id:109,srNo:109,category:"Bulk Pack",ml:"4 LTR",name:"American Nuts",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6},
-  {id:110,srNo:110,category:"Bulk Pack",ml:"4 LTR",name:"Rajbhog",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6},
-  {id:111,srNo:111,category:"Bulk Pack",ml:"4 LTR",name:"Dryfruit Malai",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6},
-  {id:112,srNo:112,category:"Bulk Pack",ml:"4 LTR",name:"Kesar Pista",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6},
-  {id:113,srNo:113,category:"Bulk Pack",ml:"4 LTR",name:"Sitaphal",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6},
-  {id:114,srNo:114,category:"Bulk Pack",ml:"4 LTR",name:"Tender Coconut",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6},
-  {id:115,srNo:115,category:"Bulk Pack",ml:"4 LTR",name:"Roasted Almond",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6},
-  {id:116,srNo:116,category:"Bulk Pack",ml:"4 LTR",name:"Spicy Guava",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6},
-  {id:117,srNo:117,category:"Sunday Tub",ml:"500 ML",name:"Chocolate Ripple",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:80.00,distMargin:0.14,distRate:70.18,unitInCrate:30},
-  {id:118,srNo:118,category:"Sunday Tub",ml:"500 ML",name:"Mango Ripple",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:80.00,distMargin:0.14,distRate:70.18,unitInCrate:30},
-  {id:119,srNo:119,category:"Take Home Tub",ml:"750 ML",name:"American Nuts",mrp:190,pcs:1,boxMrp:190,retailMargin:0.25,ssRate:151.97,distMargin:0.14,distRate:133.31,unitInCrate:24},
-  {id:120,srNo:120,category:"Take Home Tub",ml:"750 ML",name:"Rajbhog",mrp:190,pcs:1,boxMrp:190,retailMargin:0.25,ssRate:151.97,distMargin:0.14,distRate:133.31,unitInCrate:24},
-  {id:121,srNo:121,category:"Take Home Tub",ml:"750 ML",name:"Belgium Chocolate",mrp:190,pcs:1,boxMrp:190,retailMargin:0.25,ssRate:151.97,distMargin:0.14,distRate:133.31,unitInCrate:24},
-  {id:122,srNo:122,category:"Take Home Tub",ml:"750 ML",name:"Dryfruit Malai Kulfi",mrp:190,pcs:1,boxMrp:190,retailMargin:0.25,ssRate:151.97,distMargin:0.14,distRate:133.31,unitInCrate:24},
-  {id:123,srNo:123,category:"Take Home Tub",ml:"750 ML",name:"Mango MahaRaja",mrp:160,pcs:1,boxMrp:160,retailMargin:0.25,ssRate:127.97,distMargin:0.14,distRate:112.26,unitInCrate:24},
-  {id:124,srNo:124,category:"Take Home Tub",ml:"750 ML",name:"Butter Scotch",mrp:160,pcs:1,boxMrp:160,retailMargin:0.25,ssRate:127.97,distMargin:0.14,distRate:112.26,unitInCrate:24},
-  {id:125,srNo:125,category:"Cake",ml:"500 ML",name:"BlackForest Cake",mrp:250,pcs:1,boxMrp:250,retailMargin:0.25,ssRate:200.00,distMargin:0.14,distRate:175.44,unitInCrate:24},
-  {id:126,srNo:126,category:"Cake",ml:"500 ML",name:"Golden Fancy Cake",mrp:250,pcs:1,boxMrp:250,retailMargin:0.25,ssRate:200.00,distMargin:0.14,distRate:175.44,unitInCrate:24},
+  {id:87,srNo:87,category:"Party Pack",ml:"1250 ML",name:"Dryfruit Malai Kulfi",mrp:220,pcs:1,boxMrp:220,retailMargin:0.30,ssRate:169.23,distMargin:0.14,distRate:148.45,unitInCrate:25,image:IMG("01_Dry_Fruit_Malai.png")},
+  {id:88,srNo:88,category:"Party Pack",ml:"1250 ML",name:"American Nuts",mrp:220,pcs:1,boxMrp:220,retailMargin:0.30,ssRate:169.23,distMargin:0.14,distRate:148.45,unitInCrate:25,image:IMG("55_American_Nuts_Take_Home_Tub.png")},
+  {id:89,srNo:89,category:"Party Pack",ml:"1250 ML",name:"Rajbhog",mrp:220,pcs:1,boxMrp:220,retailMargin:0.30,ssRate:169.23,distMargin:0.14,distRate:148.45,unitInCrate:6,image:IMG("04_Rajbhog.png")},
+  // ── Catering Pack ──
+  {id:90,srNo:90,category:"Catering Pack",ml:"5 LTR",name:"Vanilla",mrp:450,pcs:1,boxMrp:450,retailMargin:0.35,ssRate:333.26,distMargin:0.14,distRate:292.34,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:91,srNo:91,category:"Catering Pack",ml:"5 LTR",name:"Strawberry",mrp:450,pcs:1,boxMrp:450,retailMargin:0.35,ssRate:333.26,distMargin:0.14,distRate:292.34,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:92,srNo:92,category:"Catering Pack",ml:"5 LTR",name:"Pista",mrp:450,pcs:1,boxMrp:450,retailMargin:0.35,ssRate:333.26,distMargin:0.14,distRate:292.34,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:93,srNo:93,category:"Catering Pack",ml:"5 LTR",name:"Mango",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.39,distMargin:0.14,distRate:422.28,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:94,srNo:94,category:"Catering Pack",ml:"5 LTR",name:"Butter Scotch",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.39,distMargin:0.14,distRate:422.28,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:95,srNo:95,category:"Catering Pack",ml:"5 LTR",name:"Chocolate",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.39,distMargin:0.14,distRate:422.28,unitInCrate:6,image:IMG("71_Creamy_Delicious_Bulk_Pack_White.png")},
+  // ── Bulk Pack ──
+  {id:96,srNo:96,category:"Bulk Pack",ml:"4 LTR",name:"Vanilla",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6,image:IMG("71_Creamy_Delicious_Bulk_Pack_White.png")},
+  {id:97,srNo:97,category:"Bulk Pack",ml:"4 LTR",name:"Pista",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:98,srNo:98,category:"Bulk Pack",ml:"4 LTR",name:"Strawberry",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:99,srNo:99,category:"Bulk Pack",ml:"4 LTR",name:"Badam",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:100,srNo:100,category:"Bulk Pack",ml:"4 LTR",name:"Pineapple",mrp:350,pcs:1,boxMrp:350,retailMargin:0.35,ssRate:259.26,distMargin:0.14,distRate:227.42,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:101,srNo:101,category:"Bulk Pack",ml:"4 LTR",name:"Mango",mrp:500,pcs:1,boxMrp:500,retailMargin:0.35,ssRate:370.37,distMargin:0.14,distRate:324.89,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:102,srNo:102,category:"Bulk Pack",ml:"4 LTR",name:"Butterscotch",mrp:500,pcs:1,boxMrp:500,retailMargin:0.35,ssRate:370.37,distMargin:0.14,distRate:324.89,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:103,srNo:103,category:"Bulk Pack",ml:"4 LTR",name:"Chocolate",mrp:500,pcs:1,boxMrp:500,retailMargin:0.35,ssRate:370.37,distMargin:0.14,distRate:324.89,unitInCrate:6,image:IMG("71_Creamy_Delicious_Bulk_Pack_White.png")},
+  {id:104,srNo:104,category:"Bulk Pack",ml:"4 LTR",name:"Tutti Frutti",mrp:500,pcs:1,boxMrp:500,retailMargin:0.35,ssRate:370.37,distMargin:0.14,distRate:324.89,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:105,srNo:105,category:"Bulk Pack",ml:"4 LTR",name:"Choco Chips",mrp:600,pcs:1,boxMrp:600,retailMargin:0.35,ssRate:444.44,distMargin:0.14,distRate:389.86,unitInCrate:6,image:IMG("71_Creamy_Delicious_Bulk_Pack_White.png")},
+  {id:106,srNo:106,category:"Bulk Pack",ml:"4 LTR",name:"Coffee Co",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.48,distMargin:0.14,distRate:422.35,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:107,srNo:107,category:"Bulk Pack",ml:"4 LTR",name:"Black Current",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.48,distMargin:0.14,distRate:422.35,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:108,srNo:108,category:"Bulk Pack",ml:"4 LTR",name:"Gulkand",mrp:650,pcs:1,boxMrp:650,retailMargin:0.35,ssRate:481.48,distMargin:0.14,distRate:422.35,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:109,srNo:109,category:"Bulk Pack",ml:"4 LTR",name:"American Nuts",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:110,srNo:110,category:"Bulk Pack",ml:"4 LTR",name:"Rajbhog",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:111,srNo:111,category:"Bulk Pack",ml:"4 LTR",name:"Dryfruit Malai",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6,image:IMG("71_Creamy_Delicious_Bulk_Pack_White.png")},
+  {id:112,srNo:112,category:"Bulk Pack",ml:"4 LTR",name:"Kesar Pista",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:113,srNo:113,category:"Bulk Pack",ml:"4 LTR",name:"Sitaphal",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  {id:114,srNo:114,category:"Bulk Pack",ml:"4 LTR",name:"Tender Coconut",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6,image:IMG("71_Creamy_Delicious_Bulk_Pack_White.png")},
+  {id:115,srNo:115,category:"Bulk Pack",ml:"4 LTR",name:"Roasted Almond",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6,image:IMG("70_Creamy_Delicious_Bulk_Pack_Blue.png")},
+  {id:116,srNo:116,category:"Bulk Pack",ml:"4 LTR",name:"Spicy Guava",mrp:700,pcs:1,boxMrp:700,retailMargin:0.35,ssRate:518.52,distMargin:0.14,distRate:454.84,unitInCrate:6,image:IMG("69_Creamy_Delicious_Bulk_Pack_Red.png")},
+  // ── Sunday Tub ──
+  {id:117,srNo:117,category:"Sunday Tub",ml:"500 ML",name:"Chocolate Ripple",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:80.00,distMargin:0.14,distRate:70.18,unitInCrate:30,image:IMG("51_Chocolate_Ripple_Sundae_Tub.png")},
+  {id:118,srNo:118,category:"Sunday Tub",ml:"500 ML",name:"Mango Ripple",mrp:100,pcs:1,boxMrp:100,retailMargin:0.25,ssRate:80.00,distMargin:0.14,distRate:70.18,unitInCrate:30,image:IMG("50_Mango_Ripple_Sundae_Tub.png")},
+  // ── Take Home Tub ──
+  {id:119,srNo:119,category:"Take Home Tub",ml:"750 ML",name:"American Nuts",mrp:190,pcs:1,boxMrp:190,retailMargin:0.25,ssRate:151.97,distMargin:0.14,distRate:133.31,unitInCrate:24,image:IMG("55_American_Nuts_Take_Home_Tub.png")},
+  {id:120,srNo:120,category:"Take Home Tub",ml:"750 ML",name:"Rajbhog",mrp:190,pcs:1,boxMrp:190,retailMargin:0.25,ssRate:151.97,distMargin:0.14,distRate:133.31,unitInCrate:24,image:IMG("53_Rajbhog_Take_Home_Tub.png")},
+  {id:121,srNo:121,category:"Take Home Tub",ml:"750 ML",name:"Belgium Chocolate",mrp:190,pcs:1,boxMrp:190,retailMargin:0.25,ssRate:151.97,distMargin:0.14,distRate:133.31,unitInCrate:24,image:IMG("56_Belgium_Chocolate_Take_Home_Tub.png")},
+  {id:122,srNo:122,category:"Take Home Tub",ml:"750 ML",name:"Dryfruit Malai Kulfi",mrp:190,pcs:1,boxMrp:190,retailMargin:0.25,ssRate:151.97,distMargin:0.14,distRate:133.31,unitInCrate:24,image:IMG("52_Dry_Fruit_Malai_Take_Home_Tub.png")},
+  {id:123,srNo:123,category:"Take Home Tub",ml:"750 ML",name:"Mango MahaRaja",mrp:160,pcs:1,boxMrp:160,retailMargin:0.25,ssRate:127.97,distMargin:0.14,distRate:112.26,unitInCrate:24,image:IMG("54_Mango_Maha_Raja_Take_Home_Tub.png")},
+  {id:124,srNo:124,category:"Take Home Tub",ml:"750 ML",name:"Butter Scotch",mrp:160,pcs:1,boxMrp:160,retailMargin:0.25,ssRate:127.97,distMargin:0.14,distRate:112.26,unitInCrate:24,image:IMG("57_Butter_Scotch_Take_Home_Tub.png")},
+  // ── Cake ──
+  {id:125,srNo:125,category:"Cake",ml:"500 ML",name:"BlackForest Cake",mrp:250,pcs:1,boxMrp:250,retailMargin:0.25,ssRate:200.00,distMargin:0.14,distRate:175.44,unitInCrate:24,image:IMG("59_Black_Forest_Cake.png")},
+  {id:126,srNo:126,category:"Cake",ml:"500 ML",name:"Golden Fancy Cake",mrp:250,pcs:1,boxMrp:250,retailMargin:0.25,ssRate:200.00,distMargin:0.14,distRate:175.44,unitInCrate:24,image:IMG("58_Golden_Fantasy_Cake.png")},
 ];
 
 const CAT_EMOJI = {"Big Cup":"🍦","Boat Cups":"🛶","Premium Cups":"✨","Small Cup":"🥛","Small Cone":"🍦","Medium Cone":"🍧","Big Cone":"🍦","Ice Candy":"🧊","Kulfi":"🍡","Premium Kulfi":"⭐","Punjabi Kulfi":"🥛","Choco Blast":"🍫","Matka":"🏺","Sunday":"🌈","Novelties":"🎉","Roll Cut":"🎂","Family Pack":"👨‍👩‍👧‍👦","Party Pack":"🎊","Bulk Pack":"📦","Catering Pack":"🍽️","Sunday Tub":"🪣","Take Home Tub":"🏠","Cake":"🎂"};
@@ -192,8 +218,8 @@ function createDB() {
       save();
     },
     getAll: (col) => store[col] || [],
-    seed: (col, docs) => { 
-      if(!store[col] || store[col].length === 0) {
+    seed: (col, docs, force=false) => { 
+      if(!store[col] || store[col].length === 0 || force) {
         store[col] = docs;
         save();
       }
@@ -210,7 +236,7 @@ DB.seed("users", [
   {_id:"u_dist1", name:"Mahesh Distributors", role:"distributor", email:"mahesh@dist.com", password:"dist123", phone:"9822001003", district:"Nagpur", status:"active", ssId:"u_ss1", createdAt: Date.now()},
   {_id:"u_retail1", name:"Vijay Sweets Corner", role:"retailer", email:"vijay@retail.com", password:"retail123", phone:"9822001004", district:"Nagpur", status:"active", distId:"u_dist1", ssId:"u_ss1", createdAt: Date.now()},
 ]);
-DB.seed("products", PRODUCTS_DEFAULT);
+DB.seed("products", PRODUCTS_DEFAULT, true);
 DB.seed("orders", []);
 DB.seed("notifications", []);
 
@@ -640,7 +666,7 @@ function Modal({open, onClose, title, children, width=500}){
 
 function Btn({children,onClick,variant="primary",disabled=false,small=false,style={}}){
   const variants={
-    primary:{bg:"linear-gradient(135deg,#1A237E,#7B1FA2)",color:"white",border:"none"},
+    primary:{bg:"linear-gradient(135deg,#1D2A78,#D14578)",color:"white",border:"none"},
     secondary:{bg:"#F5F5F5",color:"#444",border:"1px solid #DDD"},
     danger:{bg:"#FFEBEE",color:"#C62828",border:"1px solid #FFCDD2"},
     success:{bg:"#E8F5E9",color:"#2E7D32",border:"1px solid #C8E6C9"},
@@ -709,7 +735,7 @@ function LoginPage({onLogin}){
   }
 
   return(
-    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#0D1B6E 0%,#3F51B5 50%,#7B1FA2 100%)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,fontFamily:"'Poppins','Segoe UI',sans-serif"}}>
+    <div style={{minHeight:"100vh",background:"linear-gradient(135deg, #1D2A78 0%, #D14578 100%)",display:"flex",alignItems:"center",justifyContent:"center",padding:16,fontFamily:"'Poppins','Segoe UI',sans-serif"}}>
       <div style={{width:"100%",maxWidth:460}}>
         <div style={{textAlign:"center",marginBottom:28}}>
           <div style={{width:76,height:76,borderRadius:38,background:"white",margin:"0 auto 14px",display:"flex",alignItems:"center",justifyContent:"center",fontSize:38,boxShadow:"0 8px 28px rgba(0,0,0,0.3)"}}>🍦</div>
@@ -719,8 +745,8 @@ function LoginPage({onLogin}){
         <div style={{background:"white",borderRadius:20,padding:30,boxShadow:"0 20px 60px rgba(0,0,0,0.3)"}}>
           {/* Tab Buttons */}
           <div style={{display:"flex",gap:10,marginBottom:22,borderBottom:"2px solid #F0F0F0",paddingBottom:14}}>
-            <button onClick={()=>{setTab("login");setErr("");}} style={{padding:"8px 16px",background:tab==="login"?"#1A237E":"transparent",color:tab==="login"?"white":"#888",border:"none",borderRadius:8,cursor:"pointer",fontWeight:700,fontSize:14}}>Sign In</button>
-            <button onClick={()=>{setTab("signup");setErr("");}} style={{padding:"8px 16px",background:tab==="signup"?"#1A237E":"transparent",color:tab==="signup"?"white":"#888",border:"none",borderRadius:8,cursor:"pointer",fontWeight:700,fontSize:14}}>Create Account</button>
+            <button onClick={()=>{setTab("login");setErr("");}} style={{padding:"8px 16px",background:tab==="login"?"#1D2A78":"transparent",color:tab==="login"?"white":"#888",border:"none",borderRadius:8,cursor:"pointer",fontWeight:700,fontSize:14}}>Sign In</button>
+            <button onClick={()=>{setTab("signup");setErr("");}} style={{padding:"8px 16px",background:tab==="signup"?"#D14578":"transparent",color:tab==="signup"?"white":"#888",border:"none",borderRadius:8,cursor:"pointer",fontWeight:700,fontSize:14}}>Create Account</button>
           </div>
 
           {tab==="login"?(
@@ -809,7 +835,7 @@ function Sidebar({role,user,active,setActive,onLogout,cartCount,notifCount}){
   const roleLabel={manager:"Manager",ss:"Super Stockist",distributor:"Distributor",retailer:"Retailer"};
 
   return(
-    <div style={{width:"100%",height:"100vh",flexShrink:0,background:"linear-gradient(180deg,#0A1648 0%,#1A237E 50%,#283593 100%)",display:"flex",flexDirection:"column",fontFamily:"'Poppins','Segoe UI',sans-serif",overflow:"hidden"}}>
+    <div style={{width:"100%",height:"100vh",flexShrink:0,background:"linear-gradient(180deg,#1D2A78 0%, #D14578 100%)",display:"flex",flexDirection:"column",fontFamily:"'Poppins','Segoe UI',sans-serif",overflow:"hidden"}}>
       <div style={{padding:"22px 18px 14px",borderBottom:"1px solid rgba(255,255,255,0.1)"}}>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
           <div style={{width:38,height:38,borderRadius:19,background:"white",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🍦</div>
@@ -832,7 +858,7 @@ function Sidebar({role,user,active,setActive,onLogout,cartCount,notifCount}){
               padding:"9px 11px",borderRadius:9,border:"none",cursor:"pointer",marginBottom:3,
               background:active===item.id?"rgba(255,255,255,0.18)":"transparent",
               color:active===item.id?"white":"rgba(255,255,255,0.6)",
-              fontWeight:active===item.id?700:400,fontSize:12
+              fontWeight:"bold",fontSize:12
             }}>
               <span style={{display:"flex",alignItems:"center",gap:9}}><span style={{fontSize:16}}>{item.icon}</span>{item.label}</span>
               {badge>0&&<span style={{background:"#FF6B9D",color:"white",fontSize:10,fontWeight:800,borderRadius:10,padding:"1px 6px",minWidth:18,textAlign:"center"}}>{badge}</span>}
@@ -912,7 +938,7 @@ function Dashboard({role,user,refreshKey}){
               <tbody>{recentOrders.map(o=>(
                 <tr key={o._id} style={{borderBottom:"1px solid #F5F5F5"}}>
                   <td style={{padding:"9px 11px",fontWeight:700,color:"#1A237E",fontSize:11}}>{o.id}</td>
-                  <td style={{padding:"9px 11px",color:"#555"}}>{o.placedByName}</td>
+                  <td style={{padding:"9px 11px",color:"#555",fontWeight:"bold"}}>{o.placedByName}</td>
                   <td style={{padding:"9px 11px",color:"#777"}}>{o.items.length}</td>
                   <td style={{padding:"9px 11px",fontWeight:700,color:"#2E7D32"}}>₹{o.grandTotal.toFixed(2)}</td>
                   <td style={{padding:"9px 11px"}}><StatusBadge status={o.status}/></td>
@@ -930,9 +956,21 @@ function Dashboard({role,user,refreshKey}){
 // ============================================================
 // PRODUCT CATALOG
 // ============================================================
-function ProductImg({category,size=50}){
+function ProductImg({category, size=50, imagePath="", name=""}){
   const emoji=CAT_EMOJI[category]||"🍨";
   const color=CAT_COLOR[category]||"#FF6B9D";
+  if (imagePath) {
+    // Transparent-bg PNGs: use contain so the full product is visible, no circle clip
+    return (
+      <div style={{width:size,height:size,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <img
+          src={imagePath}
+          alt={name||category}
+          style={{width:"100%",height:"100%",objectFit:"contain",display:"block"}}
+        />
+      </div>
+    );
+  }
   return <div style={{width:size,height:size,borderRadius:size/2,background:color+"22",border:`2px solid ${color}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:size*.44,flexShrink:0}}>{emoji}</div>;
 }
 
@@ -1020,7 +1058,7 @@ function ProductCatalog({role,user,cart,setCart,setActive}){
               return(
                 <div key={p.id} className="card-hover" style={{background:"white",borderRadius:12,padding:13,border:inCart?`2px solid ${color}`:"1.5px solid #F0F0F0",position:"relative",boxShadow:"0 2px 8px rgba(0,0,0,0.04)",display:"flex",flexDirection:"column"}}>
                   {inCart&&<div style={{position:"absolute",top:7,right:7,width:18,height:18,borderRadius:9,background:color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"white",fontWeight:900}}>✓</div>}
-                  <ProductImg category={p.category} size={46}/>
+                  <ProductImg category={p.category} size={46} imagePath={p.image} name={p.name} />
                   <p style={{margin:"9px 0 1px",fontWeight:700,fontSize:12,color:"#1A237E"}}>{p.name}</p>
                   <p style={{margin:0,fontSize:10,color:"#AAA"}}>{p.ml} · {p.pcs} pcs/box</p>
                   <div style={{marginTop:7,display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
@@ -1054,7 +1092,7 @@ function ProductCatalog({role,user,cart,setCart,setActive}){
         {modal&&(
           <div>
             <div style={{display:"flex",gap:14,marginBottom:18}}>
-              <ProductImg category={modal.category} size={68}/>
+              <ProductImg category={modal.category} size={68} imagePath={modal.image} name={modal.name} />
               <div>
                 <p style={{margin:0,fontSize:10,color:"#888",textTransform:"uppercase",letterSpacing:1}}>{modal.category}</p>
                 <h3 style={{margin:"3px 0",fontSize:18,fontWeight:800,color:"#1A237E"}}>{modal.name}</h3>
@@ -1197,7 +1235,7 @@ function Basket({role,user,cart,setCart,onConfirm}){
         })}
       </div>
 
-      <div style={{background:"linear-gradient(135deg,#0D1B6E,#7B1FA2)",borderRadius:14,padding:22,color:"white"}}>
+      <div style={{background:"linear-gradient(135deg,#1D2A78,#D14578)",borderRadius:14,padding:22,color:"white"}}>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:18,marginBottom:18}}>
           {[["Total Cartons",totalCartons],["Total Units",totalUnits.toLocaleString("en-IN")],["Grand Total","₹"+grandTotal.toFixed(2)]].map(([k,v])=>(
             <div key={k}><p style={{margin:0,opacity:.65,fontSize:11}}>{k}</p><p style={{margin:"4px 0 0",fontSize:k==="Grand Total"?24:20,fontWeight:800}}>{v}</p></div>

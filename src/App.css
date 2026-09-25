@@ -19,7 +19,7 @@ button, input, select, textarea {
 .app-container {
   display: flex;
   min-height: 100vh;
-  background: #F8F9FD;
+  background: #FFF0F5;
   width: 100%;
   position: relative;
 }
@@ -113,7 +113,7 @@ button, input, select, textarea {
   justify-content: space-between;
   padding: 12px 12px;
   background: white;
-  color: #1A237E;
+  color: #1D2A78;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -151,7 +151,7 @@ button, input, select, textarea {
   width: 250px;
   height: 100vh;
   z-index: 3000;
-  background: linear-gradient(180deg, #0A1648 0%, #1A237E 50%, #283593 100%);
+  background: linear-gradient(180deg, #1D2A78 0%, #D14578 100%);
   transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 0 20px rgba(0,0,0,0.3);
@@ -322,8 +322,8 @@ button, input, select, textarea {
   transition: border-color 0.2s, box-shadow 0.2s !important;
 }
 .modern-input:focus {
-  border-color: #1A237E !important;
-  box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.15) !important;
+  border-color: #1D2A78 !important;
+  box-shadow: 0 0 0 3px rgba(29, 42, 120, 0.15) !important;
 }
 
 /* Navbar search input */
