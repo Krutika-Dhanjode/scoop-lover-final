@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import "./App.css";
+
+// Set up PDF.js worker using local file
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 // ============================================================
 // CORRECT RATES FROM PDF (FINAL_PRICE_RETAIL_14_SS_)
@@ -10,23 +15,23 @@ import "./App.css";
 const IMG = (f) => `/ScoopLovers_images/${f}`;
 const PRODUCTS_DEFAULT = [
   // ── Big Cup ──
-  {id:1,srNo:1,category:"Big Cup",ml:"55 ML",name:"Vanilla",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,image:IMG("49_Vanilla_Scoop.png")},
-  {id:2,srNo:2,category:"Big Cup",ml:"55 ML",name:"Pista",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,image:IMG("47_Pista_Scoop.png")},
-  {id:3,srNo:3,category:"Big Cup",ml:"55 ML",name:"Strawberry",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,image:IMG("48_Strawberry_Scoop.png")},
+  {id:1,srNo:1,category:"Big Cup",ml:"55 ML",name:"Vanilla",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("49_Vanilla_Scoop.png")},
+  {id:2,srNo:2,category:"Big Cup",ml:"55 ML",name:"Pista",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("47_Pista_Scoop.png")},
+  {id:3,srNo:3,category:"Big Cup",ml:"55 ML",name:"Strawberry",mrp:10,pcs:24,boxMrp:240,retailMargin:0.23,ssRate:194.96,distMargin:0.14,distRate:171.02,unitInCrate:6,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("48_Strawberry_Scoop.png")},
   // ── Boat Cups ──
-  {id:4,srNo:4,category:"Boat Cups",ml:"90 ML",name:"American Nuts",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("55_American_Nuts_Take_Home_Tub.png")},
-  {id:5,srNo:5,category:"Boat Cups",ml:"90 ML",name:"Mango",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("54_Mango_Maha_Raja_Take_Home_Tub.png")},
-  {id:6,srNo:6,category:"Boat Cups",ml:"90 ML",name:"Mawa Badam",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("19_Mawa_Malai_Kulfi.png")},
-  {id:7,srNo:7,category:"Boat Cups",ml:"90 ML",name:"Butter Scotch",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("57_Butter_Scotch_Take_Home_Tub.png")},
-  {id:8,srNo:8,category:"Boat Cups",ml:"90 ML",name:"Tutti Fruiti",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8},
-  {id:9,srNo:9,category:"Boat Cups",ml:"90 ML",name:"Chocolate Fudge",mrp:20,pcs:12,boxMrp:240,retailMargin:0.25,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,image:IMG("68_Chocolate_Fudge_Party_Pack.png")},
+  {id:4,srNo:4,category:"Boat Cups",ml:"90 ML",name:"American Nuts",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("55_American_Nuts_Take_Home_Tub.png")},
+  {id:5,srNo:5,category:"Boat Cups",ml:"90 ML",name:"Mango",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("54_Mango_Maha_Raja_Take_Home_Tub.png")},
+  {id:6,srNo:6,category:"Boat Cups",ml:"90 ML",name:"Mawa Badam",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("19_Mawa_Malai_Kulfi.png")},
+  {id:7,srNo:7,category:"Boat Cups",ml:"90 ML",name:"Butter Scotch",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("57_Butter_Scotch_Take_Home_Tub.png")},
+  {id:8,srNo:8,category:"Boat Cups",ml:"90 ML",name:"Tutti Fruiti",mrp:20,pcs:12,boxMrp:240,retailMargin:0.24,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default"},
+  {id:9,srNo:9,category:"Boat Cups",ml:"90 ML",name:"Chocolate Fudge",mrp:20,pcs:12,boxMrp:240,retailMargin:0.25,ssRate:193.11,distMargin:0.14,distRate:169.40,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("68_Chocolate_Fudge_Party_Pack.png")},
   // ── Premium Cups ──
-  {id:10,srNo:10,category:"Premium Cups",ml:"100 ML",name:"Chocolate Chips",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,image:IMG("02_Choco_Chips.png")},
-  {id:11,srNo:11,category:"Premium Cups",ml:"100 ML",name:"Dryfruit Malai Kulfi",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,image:IMG("01_Dry_Fruit_Malai.png")},
-  {id:12,srNo:12,category:"Premium Cups",ml:"100 ML",name:"Fruit Cocktail",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,image:IMG("03_Fruit_Cocktail.png")},
-  {id:13,srNo:13,category:"Premium Cups",ml:"100 ML",name:"Raj Bhog",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,image:IMG("04_Rajbhog.png")},
-  {id:14,srNo:14,category:"Premium Cups",ml:"100 ML",name:"Sitafal",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,image:IMG("05_Sitafal.png")},
-  {id:15,srNo:15,category:"Premium Cups",ml:"100 ML",name:"Tender Coconut",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,image:IMG("06_Tender_Coconut.png")},
+  {id:10,srNo:10,category:"Premium Cups",ml:"100 ML",name:"Chocolate Chips",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("02_Choco_Chips.png")},
+  {id:11,srNo:11,category:"Premium Cups",ml:"100 ML",name:"Dryfruit Malai Kulfi",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("01_Dry_Fruit_Malai.png")},
+  {id:12,srNo:12,category:"Premium Cups",ml:"100 ML",name:"Fruit Cocktail",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("03_Fruit_Cocktail.png")},
+  {id:13,srNo:13,category:"Premium Cups",ml:"100 ML",name:"Raj Bhog",mrp:30,pcs:12,boxMrp:360,retailMargin:0.24,ssRate:289.69,distMargin:0.14,distRate:254.12,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("04_Rajbhog.png")},
+  {id:14,srNo:14,category:"Premium Cups",ml:"100 ML",name:"Sitafal",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("05_Sitafal.png")},
+  {id:15,srNo:15,category:"Premium Cups",ml:"100 ML",name:"Tender Coconut",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,ssRateSheet:"Default",distRateSheet:"Default",image:IMG("06_Tender_Coconut.png")},
   // id:16 — Choco Almond cup/tub → 07_Choco_Almond.png (cup variant)
   {id:16,srNo:16,category:"Premium Cups",ml:"100 ML",name:"Choco Almond",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,image:IMG("07_Choco_Almond.png")},
   {id:17,srNo:17,category:"Premium Cups",ml:"100 ML",name:"Belgium Chocolate",mrp:40,pcs:12,boxMrp:480,retailMargin:0.29,ssRate:371.40,distMargin:0.14,distRate:325.79,unitInCrate:8,image:IMG("08_Belgium_Chocolate.png")},
@@ -579,6 +584,61 @@ function parseUploadedCSV(text) {
   return parseRawSheetData(rows);
 }
 
+function parsePDFText(text) {
+  const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+  const result = [];
+  
+  // Common patterns for product entries in PDF rate sheets
+  // Look for lines containing product names and numeric rates
+  const productPatterns = [
+    /([A-Za-z\s]+)\s+(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)/,  // Name Rate1 Rate2
+    /([A-Za-z\s]+)\s+(\d+(?:\.\d+)?)/,  // Name Rate
+  ];
+  
+  // Category keywords to identify sections
+  const categoryKeywords = ["cup", "tub", "cone", "kulfi", "premium", "big", "boat", "family", "party"];
+  
+  let currentCategory = "General";
+  
+  for (const line of lines) {
+    // Check if this line is a category header
+    const lowerLine = line.toLowerCase();
+    const matchedCategory = categoryKeywords.find(kw => lowerLine.includes(kw));
+    if (matchedCategory && line.length < 50) {
+      currentCategory = line;
+      continue;
+    }
+    
+    // Try to extract product data
+    for (const pattern of productPatterns) {
+      const match = line.match(pattern);
+      if (match) {
+        const name = match[1].trim();
+        const rate1 = parseFloat(match[2]);
+        const rate2 = match[3] ? parseFloat(match[3]) : null;
+        
+        // Filter out non-product lines (too short or too long)
+        if (name.length < 3 || name.length > 40) continue;
+        // Filter out lines that are mostly numbers
+        if (name.replace(/[^A-Za-z]/g, "").length < 2) continue;
+        
+        const row = {
+          "Product Name": name,
+          "Category": currentCategory,
+          "Rate": rate1,
+        };
+        if (rate2 !== null) {
+          row["Rate 2"] = rate2;
+        }
+        result.push(row);
+        break;
+      }
+    }
+  }
+  
+  return result;
+}
+
 function extractRateValue(row, uploadType) {
   const ssKeys = ["retail rate", "ss rate", "ssrate", "retailrate", "ss margin rate", "ss price", "ssprice", "retail margin price", "retail margin rate"];
   const distKeys = ["dist rate", "distrate", "distributor rate", "distributorrate", "dist price", "distprice", "distributor price", "distributorprice"];
@@ -921,6 +981,76 @@ function Dashboard({role,user,refreshKey}){
       <div className="stats-grid">
         {(statsByRole[role]||[]).map((s,i)=><StatCard key={i} {...s}/>)}
       </div>
+      {role==="manager" && (() => {
+        const rateSheets = DB.getAll("rateSheets") || [];
+        const activeSS = rateSheets.filter(s=>s.type==="ss").sort((a,b)=>b.appliedAt-a.appliedAt)[0] || null;
+        const activeDist = rateSheets.filter(s=>s.type==="distributor").sort((a,b)=>b.appliedAt-a.appliedAt)[0] || null;
+        return (
+          <Card style={{marginTop:16}}>
+            <h3 style={{margin:"0 0 14px",fontSize:15,fontWeight:700,color:"#1A237E"}}>📊 Active Rate Sheets</h3>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:14}}>
+              <div style={{background:"linear-gradient(135deg, #E3F2FD, #BBDEFB)",borderRadius:12,padding:16,border:"1.5px solid #90CAF9"}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+                  <div style={{width:32,height:32,borderRadius:16,background:"#1565C0",display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontSize:14,fontWeight:800}}>SS</div>
+                  <div>
+                    <p style={{margin:0,fontSize:12,fontWeight:800,color:"#0D47A1"}}>Super Stockist Rates</p>
+                    <p style={{margin:"2px 0 0",fontSize:10,color:"#1976D2"}}>Source Excel file</p>
+                  </div>
+                </div>
+                {activeSS ? (
+                  <div style={{background:"rgba(255,255,255,0.7)",borderRadius:8,padding:10,fontSize:11}}>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                      <span style={{color:"#666"}}>File:</span>
+                      <span style={{fontWeight:700,color:"#0D47A1"}}>{activeSS.fileName}</span>
+                    </div>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                      <span style={{color:"#666"}}>Applied:</span>
+                      <span style={{fontWeight:600,color:"#333"}}>{new Date(activeSS.appliedAt).toLocaleString("en-IN")}</span>
+                    </div>
+                    <div style={{display:"flex",justifyContent:"space-between"}}>
+                      <span style={{color:"#666"}}>Products Updated:</span>
+                      <span style={{fontWeight:700,color:"#2E7D32"}}>{activeSS.productsUpdated}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{background:"rgba(255,255,255,0.5)",borderRadius:8,padding:10,textAlign:"center",color:"#90A4AE",fontSize:11}}>
+                    No SS rate sheet uploaded yet
+                  </div>
+                )}
+              </div>
+              <div style={{background:"linear-gradient(135deg, #E8F5E9, #C8E6C9)",borderRadius:12,padding:16,border:"1.5px solid #A5D6A7"}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+                  <div style={{width:32,height:32,borderRadius:16,background:"#2E7D32",display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontSize:11,fontWeight:800}}>DIS</div>
+                  <div>
+                    <p style={{margin:0,fontSize:12,fontWeight:800,color:"#1B5E20"}}>Distributor Rates</p>
+                    <p style={{margin:"2px 0 0",fontSize:10,color:"#388E3C"}}>Source Excel file</p>
+                  </div>
+                </div>
+                {activeDist ? (
+                  <div style={{background:"rgba(255,255,255,0.7)",borderRadius:8,padding:10,fontSize:11}}>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                      <span style={{color:"#666"}}>File:</span>
+                      <span style={{fontWeight:700,color:"#1B5E20"}}>{activeDist.fileName}</span>
+                    </div>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                      <span style={{color:"#666"}}>Applied:</span>
+                      <span style={{fontWeight:600,color:"#333"}}>{new Date(activeDist.appliedAt).toLocaleString("en-IN")}</span>
+                    </div>
+                    <div style={{display:"flex",justifyContent:"space-between"}}>
+                      <span style={{color:"#666"}}>Products Updated:</span>
+                      <span style={{fontWeight:700,color:"#2E7D32"}}>{activeDist.productsUpdated}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{background:"rgba(255,255,255,0.5)",borderRadius:8,padding:10,textAlign:"center",color:"#90A4AE",fontSize:11}}>
+                    No Distributor rate sheet uploaded yet
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
+        );
+      })()}
       <Card>
         <h3 style={{margin:"0 0 16px",fontSize:15,fontWeight:700,color:"#1A237E"}}>Recent Orders</h3>
         {recentOrders.length===0?(
@@ -1634,13 +1764,56 @@ function UploadRateSheet({setRefreshKey}){
   const [dragging,setDragging]=useState(false);
   const [status,setStatus]=useState("");
   const [preview,setPreview]=useState([]);
+  const [showCurrentPrices,setShowCurrentPrices]=useState(true);
+  const [priceFilter,setPriceFilter]=useState("All");
+  const [lastChanges,setLastChanges]=useState(null);
+  const [,forceRender]=useState(0);
   const fileRef=useRef();
 
-  function processFile(file){
+  // Load saved rate sheet history from DB — use state so it refreshes after apply
+  const [rateSheetHistory,setRateSheetHistory] = useState(DB.getAll("rateSheets") || []);
+  const activeSSSheet = rateSheetHistory.filter(s=>s.type==="ss").sort((a,b)=>b.appliedAt-a.appliedAt)[0] || null;
+  const activeDistSheet = rateSheetHistory.filter(s=>s.type==="distributor").sort((a,b)=>b.appliedAt-a.appliedAt)[0] || null;
+
+  async function processFile(file){
     if(!file)return;
-    const reader=new FileReader();
+    const isPdf = file.name.endsWith(".pdf");
     const isXlsx = file.name.endsWith(".xlsx") || file.name.endsWith(".xls");
     
+    if (isPdf) {
+      // Handle PDF files
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let allText = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(" ");
+          allText += pageText + "\n";
+        }
+        const parsed = parsePDFText(allText);
+        if(!parsed||parsed.length===0){
+          setStatus("❌ Could not parse PDF. Please ensure it contains product names and rate values in a table format.");
+          setPreview([]);
+          return;
+        }
+        setPreview(parsed);
+        setStatus(`✅ Parsed ${parsed.length} rows from PDF. Review below then click Apply.`);
+        window._parsedRates=parsed;
+        window._rateSheetMetadata={
+          type:uploadType,
+          fileName:file.name,
+          uploadedAt:new Date().toLocaleString(),
+          totalRows:parsed.length
+        };
+      } catch (err) {
+        setStatus("❌ Failed to parse PDF file. Error: " + err.message);
+      }
+      return;
+    }
+    
+    const reader=new FileReader();
     reader.onload=(e)=>{
       let parsed = null;
       if (isXlsx) {
@@ -1694,7 +1867,27 @@ function UploadRateSheet({setRefreshKey}){
     const parsed=window._parsedRates;
     if(!parsed){return;}
     let updated=0;
+    let unmatched=[];
     const currentProducts=DB.getAll("products");
+    const changedProducts = [];
+    
+    // Helper: normalize string for matching (remove extra spaces, special chars)
+    const normalize = (s) => String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+    
+    // Helper: fuzzy match score (0-1)
+    const matchScore = (a, b) => {
+      const na = normalize(a);
+      const nb = normalize(b);
+      if (!na || !nb) return 0;
+      if (na === nb) return 1;
+      if (na.includes(nb) || nb.includes(na)) return 0.9;
+      // Check if all words match
+      const wordsA = na.split("").filter(Boolean);
+      let matches = 0;
+      for (const ch of na) { if (nb.includes(ch)) matches++; }
+      return matches / Math.max(na.length, nb.length);
+    };
+    
     parsed.forEach(row=>{
       const keys = Object.keys(row);
       const nameSynonyms = ["product name", "productname", "name", "product", "item", "item name", "particulars", "particular"];
@@ -1711,15 +1904,31 @@ function UploadRateSheet({setRefreshKey}){
       
       if(!name) return;
       
-      const match = currentProducts.find(p => p.name.toLowerCase() === name && (!cat || p.category.toLowerCase() === cat) && (!ml || p.ml.toLowerCase() === ml));
-      if(match){
+      // Find best matching product using fuzzy matching
+      let bestMatch = null;
+      let bestScore = 0;
+      currentProducts.forEach(p => {
+        const nameScore = matchScore(name, p.name);
+        const catScore = cat ? (p.category.toLowerCase() === cat ? 1 : (normalize(p.category).includes(normalize(cat)) || normalize(cat).includes(normalize(p.category)) ? 0.8 : 0)) : 0.5;
+        const mlScore = ml ? (p.ml.toLowerCase() === ml ? 1 : (normalize(p.ml).includes(normalize(ml)) || normalize(ml).includes(normalize(p.ml)) ? 0.8 : 0)) : 0.5;
+        const totalScore = (nameScore * 0.7) + (catScore * 0.2) + (mlScore * 0.1);
+        if (totalScore > bestScore && totalScore > 0.6) {
+          bestScore = totalScore;
+          bestMatch = p;
+        }
+      });
+      
+      if(bestMatch){
         const rate = extractRateValue(row, uploadType);
         const updateObj = {};
+        const fileName = (window._rateSheetMetadata && window._rateSheetMetadata.fileName) || "Unknown";
         if (rate > 0) {
           if (uploadType === "ss") {
             updateObj.ssRate = rate;
+            updateObj.ssRateSheet = fileName;
           } else {
             updateObj.distRate = rate;
+            updateObj.distRateSheet = fileName;
           }
         }
         // Detect and update margin columns
@@ -1747,23 +1956,133 @@ function UploadRateSheet({setRefreshKey}){
           }
         }
         if (Object.keys(updateObj).length > 0) {
-          DB.update("products", {id: match.id}, updateObj);
+          const oldRate = uploadType === "ss" ? bestMatch.ssRate : bestMatch.distRate;
+          const newRate = uploadType === "ss" ? (updateObj.ssRate || bestMatch.ssRate) : (updateObj.distRate || bestMatch.distRate);
+          DB.update("products", {id: bestMatch.id}, updateObj);
           updated++;
+          changedProducts.push({
+            name: bestMatch.name,
+            category: bestMatch.category,
+            ml: bestMatch.ml,
+            oldRate: oldRate,
+            newRate: newRate,
+            change: newRate - oldRate
+          });
         }
+      } else {
+        unmatched.push(name);
       }
     });
-    setStatus(`✅ Updated ${updated} products with new ${uploadType === "ss" ? "Super Stockist (SS)" : "Distributor"} rates. Changes are live immediately.`);
+
+    // Save the rate sheet record to DB for history tracking
+    const metadata = window._rateSheetMetadata || {};
+    DB.insert("rateSheets", {
+      type: uploadType,
+      fileName: metadata.fileName || "Unknown",
+      uploadedAt: metadata.uploadedAt || new Date().toLocaleString(),
+      appliedAt: Date.now(),
+      totalRows: metadata.totalRows || parsed.length,
+      productsUpdated: updated,
+      changedProducts: changedProducts.slice(0, 50), // store first 50 changes for reference
+      status: "active"
+    });
+
+    pushNotif("📊", "Rate Sheet Updated", `${uploadType === "ss" ? "SS" : "Distributor"} rates updated from "${metadata.fileName}" — ${updated} products changed.`, "all");
+
+    const unmatchedMsg = unmatched.length > 0 ? ` | ⚠️ ${unmatched.length} rows unmatched: ${unmatched.slice(0,5).join(", ")}${unmatched.length>5?"...":""}` : "";
+    setStatus(`✅ Updated ${updated} products with new ${uploadType === "ss" ? "Super Stockist (SS)" : "Distributor"} rates.${unmatchedMsg}`);
     setPreview([]);
     setRefreshKey(k=>k+1);
+    forceRender(v=>v+1);
     window._parsedRates=null;
+    // Save last changes for summary display
+    setLastChanges({
+      type: uploadType,
+      fileName: metadata.fileName || "Unknown",
+      updated,
+      unmatched: unmatched.length,
+      changes: changedProducts,
+      appliedAt: new Date().toLocaleString("en-IN")
+    });
+    // Refresh rate sheet history so UI updates immediately
+    setRateSheetHistory(DB.getAll("rateSheets") || []);
   }
+
+  // Get current products for the price table
+  const products = DB.getAll("products");
+  const cats = [...new Set(products.map(p=>p.category))];
+  const filteredProducts = priceFilter === "All" ? products : products.filter(p=>p.category===priceFilter);
 
   return(
     <div>
       <h2 style={{margin:"0 0 6px",fontSize:20,fontWeight:800,color:"#1A237E"}}>⬆️ Upload Rate Sheet</h2>
       <p style={{margin:"0 0 16px",color:"#888",fontSize:13}}>
-        Upload an updated Excel spreadsheet (.xlsx, .xls) or CSV rate sheet to refresh product prices system-wide. Selecting the correct option will update the corresponding pricing logic for all orders.
+        Upload an updated Excel spreadsheet (.xlsx, .xls), CSV, or PDF rate sheet to refresh product prices system-wide. Selecting the correct option will update the corresponding pricing logic for all orders.
       </p>
+
+      {/* Currently Active Rate Sheets */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:14,marginBottom:20}}>
+        <div style={{background:"linear-gradient(135deg, #E3F2FD, #BBDEFB)",borderRadius:14,padding:18,border:"1.5px solid #90CAF9",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:10,right:14,fontSize:28,opacity:0.15}}>📄</div>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+            <div style={{width:36,height:36,borderRadius:18,background:"#1565C0",display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontSize:16,fontWeight:800}}>SS</div>
+            <div>
+              <p style={{margin:0,fontSize:12,fontWeight:800,color:"#0D47A1"}}>Super Stockist Rate Sheet</p>
+              <p style={{margin:"2px 0 0",fontSize:10,color:"#1976D2"}}>Currently active pricing</p>
+            </div>
+          </div>
+          {activeSSSheet ? (
+            <div style={{background:"rgba(255,255,255,0.7)",borderRadius:8,padding:10,fontSize:11}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                <span style={{color:"#666"}}>📁 File:</span>
+                <span style={{fontWeight:700,color:"#0D47A1"}}>{activeSSSheet.fileName}</span>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                <span style={{color:"#666"}}>📅 Applied:</span>
+                <span style={{fontWeight:600,color:"#333"}}>{new Date(activeSSSheet.appliedAt).toLocaleString("en-IN")}</span>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between"}}>
+                <span style={{color:"#666"}}>✅ Products Updated:</span>
+                <span style={{fontWeight:700,color:"#2E7D32"}}>{activeSSSheet.productsUpdated}</span>
+              </div>
+            </div>
+          ) : (
+            <div style={{background:"rgba(255,255,255,0.5)",borderRadius:8,padding:12,textAlign:"center",color:"#90A4AE",fontSize:12}}>
+              No SS rate sheet uploaded yet — using default prices
+            </div>
+          )}
+        </div>
+        <div style={{background:"linear-gradient(135deg, #E8F5E9, #C8E6C9)",borderRadius:14,padding:18,border:"1.5px solid #A5D6A7",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:10,right:14,fontSize:28,opacity:0.15}}>📄</div>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+            <div style={{width:36,height:36,borderRadius:18,background:"#2E7D32",display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontSize:13,fontWeight:800}}>DIS</div>
+            <div>
+              <p style={{margin:0,fontSize:12,fontWeight:800,color:"#1B5E20"}}>Distributor Rate Sheet</p>
+              <p style={{margin:"2px 0 0",fontSize:10,color:"#388E3C"}}>Currently active pricing</p>
+            </div>
+          </div>
+          {activeDistSheet ? (
+            <div style={{background:"rgba(255,255,255,0.7)",borderRadius:8,padding:10,fontSize:11}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                <span style={{color:"#666"}}>📁 File:</span>
+                <span style={{fontWeight:700,color:"#1B5E20"}}>{activeDistSheet.fileName}</span>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4}}>
+                <span style={{color:"#666"}}>📅 Applied:</span>
+                <span style={{fontWeight:600,color:"#333"}}>{new Date(activeDistSheet.appliedAt).toLocaleString("en-IN")}</span>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between"}}>
+                <span style={{color:"#666"}}>✅ Products Updated:</span>
+                <span style={{fontWeight:700,color:"#2E7D32"}}>{activeDistSheet.productsUpdated}</span>
+              </div>
+            </div>
+          ) : (
+            <div style={{background:"rgba(255,255,255,0.5)",borderRadius:8,padding:12,textAlign:"center",color:"#90A4AE",fontSize:12}}>
+              No Distributor rate sheet uploaded yet — using default prices
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Upload Type Options */}
       <div style={{display:"flex",gap:8,marginBottom:20,flexWrap:"wrap"}}>
@@ -1793,9 +2112,9 @@ function UploadRateSheet({setRefreshKey}){
           onClick={()=>fileRef.current.click()}
           style={{border:`2px dashed ${dragging?"#1A237E":"#CCC"}`,borderRadius:12,padding:"40px 20px",textAlign:"center",cursor:"pointer",background:dragging?"#E8EAF6":"#FAFAFA",transition:"all .2s"}}>
           <div style={{fontSize:44,marginBottom:10}}>📂</div>
-          <p style={{margin:0,fontWeight:700,color:"#1A237E",fontSize:14}}>Drop Excel (.xlsx, .xls) or CSV file here or click to browse</p>
+          <p style={{margin:0,fontWeight:700,color:"#1A237E",fontSize:14}}>Drop Excel (.xlsx, .xls), CSV, or PDF file here or click to browse</p>
           <p style={{margin:"6px 0 0",color:"#AAA",fontSize:12}}>Uploading as: <strong>{uploadType === "ss" ? "Super Stockist (SS) Rates" : "Distributor Rates"}</strong></p>
-          <input ref={fileRef} type="file" style={{display:"none"}} onChange={e=>processFile(e.target.files[0])}/>
+          <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv,.pdf" style={{display:"none"}} onChange={e=>processFile(e.target.files[0])}/>
         </div>
       </Card>
 
@@ -1825,6 +2144,51 @@ e.g. Big Cup, Vanilla, 171.02`
         <div style={{padding:"10px 14px",borderRadius:9,marginBottom:14,background:status.startsWith("✅")?"#E8F5E9":"#FFEBEE",color:status.startsWith("✅")?"#2E7D32":"#C62828",fontSize:13,fontWeight:600}}>{status}</div>
       )}
 
+      {lastChanges && lastChanges.changes && lastChanges.changes.length > 0 && (
+        <Card style={{marginBottom:16,border:"2px solid #4CAF50"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+            <div>
+              <h3 style={{margin:0,fontSize:15,fontWeight:800,color:"#2E7D32"}}>✅ Rate Changes Summary</h3>
+              <p style={{margin:"3px 0 0",fontSize:11,color:"#666"}}>
+                {lastChanges.fileName} — {lastChanges.updated} products updated — {lastChanges.appliedAt}
+              </p>
+            </div>
+            <button onClick={()=>setLastChanges(null)} style={{padding:"6px 12px",borderRadius:8,border:"none",cursor:"pointer",fontSize:11,fontWeight:700,background:"#E8F5E9",color:"#2E7D32"}}>✕ Close</button>
+          </div>
+          <div style={{overflowX:"auto",maxHeight:"350px",overflowY:"auto"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
+              <thead style={{position:"sticky",top:0}}>
+                <tr style={{background:"#1A237E"}}>
+                  {["#","Product","Category","ML","Old Rate","New Rate","Change"].map(h=>(
+                    <th key={h} style={{padding:"8px 10px",textAlign:"left",color:"white",fontWeight:700,whiteSpace:"nowrap"}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {lastChanges.changes.map((c,i)=>(
+                  <tr key={i} style={{borderBottom:"1px solid #F5F5F5",background:i%2===0?"white":"#FAFAFA"}}>
+                    <td style={{padding:"7px 10px",color:"#AAA"}}>{i+1}</td>
+                    <td style={{padding:"7px 10px",fontWeight:700,color:"#1A237E"}}>{c.name}</td>
+                    <td style={{padding:"7px 10px",color:"#555"}}>{c.category}</td>
+                    <td style={{padding:"7px 10px",color:"#666"}}>{c.ml}</td>
+                    <td style={{padding:"7px 10px",textDecoration:"line-through",color:"#999"}}>₹{c.oldRate.toFixed(2)}</td>
+                    <td style={{padding:"7px 10px",fontWeight:800,color:"#2E7D32"}}>₹{c.newRate.toFixed(2)}</td>
+                    <td style={{padding:"7px 10px",fontWeight:700,color:c.change>=0?"#C62828":"#2E7D32"}}>
+                      {c.change>=0?"+":"-"}₹{Math.abs(c.change).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {lastChanges.unmatched > 0 && (
+            <div style={{marginTop:10,padding:"8px 12px",background:"#FFF3E0",borderRadius:8,fontSize:11,color:"#E65100"}}>
+              ⚠️ {lastChanges.unmatched} rows from your Excel sheet could not be matched to any product. Check the product names and try again.
+            </div>
+          )}
+        </Card>
+      )}
+
       {preview.length>0&&(
         <Card style={{marginBottom:16}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
@@ -1851,6 +2215,111 @@ e.g. Big Cup, Vanilla, 171.02`
                   {Object.values(row).slice(0,8).map((v,j)=><td key={j} style={{padding:"7px 9px",color:"#444"}}>{v}</td>)}
                 </tr>
               ))}</tbody>
+            </table>
+          </div>
+        </Card>
+      )}
+
+      {/* Current Product Prices Table — shows live data from the DB */}
+      <Card style={{marginBottom:16}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:10}}>
+          <div>
+            <h3 style={{margin:0,fontSize:15,fontWeight:800,color:"#1A237E"}}>📋 Current Product Prices (Live Data)</h3>
+            <p style={{margin:"3px 0 0",fontSize:11,color:"#999"}}>These are the prices currently active for SS & Distributor dashboards — {products.length} products</p>
+          </div>
+          <div style={{display:"flex",gap:6,alignItems:"center"}}>
+            <button onClick={()=>setShowCurrentPrices(!showCurrentPrices)} style={{padding:"6px 12px",borderRadius:8,border:"none",cursor:"pointer",fontSize:11,fontWeight:700,background:showCurrentPrices?"#1A237E":"#E2E8F0",color:showCurrentPrices?"white":"#475569"}}>
+              {showCurrentPrices?"▲ Hide Table":"▼ Show Table"}
+            </button>
+          </div>
+        </div>
+        {showCurrentPrices && (
+          <>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
+              <button onClick={()=>setPriceFilter("All")} style={{padding:"4px 11px",borderRadius:16,border:"none",cursor:"pointer",fontSize:11,fontWeight:700,background:priceFilter==="All"?"#1A237E":"#F0F0F0",color:priceFilter==="All"?"white":"#555"}}>All ({products.length})</button>
+              {cats.map(c=>(
+                <button key={c} onClick={()=>setPriceFilter(c)} style={{padding:"4px 11px",borderRadius:16,border:"none",cursor:"pointer",fontSize:10,fontWeight:600,background:priceFilter===c?(CAT_COLOR[c]||"#1A237E"):"#F0F0F0",color:priceFilter===c?"white":"#555"}}>
+                  {CAT_EMOJI[c]||"🍦"} {c} ({products.filter(p=>p.category===c).length})
+                </button>
+              ))}
+            </div>
+            <div style={{overflowX:"auto",maxHeight:"500px",overflowY:"auto",border:"1px solid #F0F0F0",borderRadius:8}}>
+              <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
+                <thead style={{position:"sticky",top:0,zIndex:1}}>
+                  <tr style={{background:"#1A237E"}}>
+                    {["SR","Category","Product","ML","MRP","Pcs","Box MRP","SS Margin","SS Rate","SS Sheet","Dist Margin","Dist Rate","Dist Sheet","Units/Crate"].map(h=>(
+                      <th key={h} style={{padding:"8px 9px",textAlign:"left",color:"white",fontWeight:700,whiteSpace:"nowrap",fontSize:10}}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredProducts.map((p,i)=>(
+                    <tr key={p.id} style={{borderBottom:"1px solid #F5F5F5",background:i%2===0?"white":"#FAFAFA"}}>
+                      <td style={{padding:"6px 9px",color:"#AAA",fontSize:10}}>{p.srNo}</td>
+                      <td style={{padding:"6px 9px",fontSize:10}}>
+                        <span style={{background:(CAT_COLOR[p.category]||"#999")+"22",color:CAT_COLOR[p.category]||"#999",padding:"2px 6px",borderRadius:10,fontWeight:700,fontSize:9,whiteSpace:"nowrap"}}>
+                          {CAT_EMOJI[p.category]||""} {p.category}
+                        </span>
+                      </td>
+                      <td style={{padding:"6px 9px",fontWeight:700,color:"#1A237E"}}>{p.name}</td>
+                      <td style={{padding:"6px 9px",color:"#888"}}>{p.ml}</td>
+                      <td style={{padding:"6px 9px",fontWeight:600}}>₹{p.mrp}</td>
+                      <td style={{padding:"6px 9px",color:"#666"}}>{p.pcs}</td>
+                      <td style={{padding:"6px 9px",color:"#666"}}>₹{p.boxMrp}</td>
+                      <td style={{padding:"6px 9px",color:"#7B1FA2",fontWeight:600}}>{(p.retailMargin*100).toFixed(1)}%</td>
+                      <td style={{padding:"6px 9px",fontWeight:800,color:"#0D47A1"}}>₹{p.ssRate.toFixed(2)}</td>
+                      <td style={{padding:"6px 9px",color:"#1565C0",fontSize:9,fontWeight:600,maxWidth:120,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}} title={p.ssRateSheet||"Default"}>{p.ssRateSheet||"Default"}</td>
+                      <td style={{padding:"6px 9px",color:"#7B1FA2",fontWeight:600}}>{(p.distMargin*100).toFixed(1)}%</td>
+                      <td style={{padding:"6px 9px",fontWeight:800,color:"#2E7D32"}}>₹{p.distRate.toFixed(2)}</td>
+                      <td style={{padding:"6px 9px",color:"#2E7D32",fontSize:9,fontWeight:600,maxWidth:120,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}} title={p.distRateSheet||"Default"}>{p.distRateSheet||"Default"}</td>
+                      <td style={{padding:"6px 9px",color:"#666",textAlign:"center"}}>{p.unitInCrate}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </Card>
+
+      {/* Rate Sheet Upload History */}
+      {rateSheetHistory.length > 0 && (
+        <Card>
+          <h3 style={{margin:"0 0 12px",fontSize:14,fontWeight:700,color:"#1A237E"}}>📜 Rate Sheet Upload History</h3>
+          <div style={{overflowX:"auto"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
+              <thead><tr style={{background:"#F8F9FA"}}>
+                {["#","File Name","Type","Applied On","Products Updated","Status"].map(h=>(
+                  <th key={h} style={{padding:"8px 10px",textAlign:"left",fontWeight:700,color:"#666",borderBottom:"1px solid #EEE"}}>{h}</th>
+                ))}
+              </tr></thead>
+              <tbody>
+                {[...rateSheetHistory].sort((a,b)=>b.appliedAt-a.appliedAt).map((sheet, i) => {
+                  const isLatestSS = activeSSSheet && sheet._id === activeSSSheet._id;
+                  const isLatestDist = activeDistSheet && sheet._id === activeDistSheet._id;
+                  const isActive = isLatestSS || isLatestDist;
+                  return (
+                    <tr key={sheet._id} style={{borderBottom:"1px solid #F5F5F5",background:isActive?"#E8F5E9":"white"}}>
+                      <td style={{padding:"7px 10px",color:"#AAA"}}>{i+1}</td>
+                      <td style={{padding:"7px 10px",fontWeight:700,color:"#1A237E"}}>{sheet.fileName}</td>
+                      <td style={{padding:"7px 10px"}}>
+                        <span style={{padding:"2px 8px",borderRadius:12,fontSize:10,fontWeight:700,background:sheet.type==="ss"?"#E3F2FD":"#E8F5E9",color:sheet.type==="ss"?"#1565C0":"#2E7D32"}}>
+                          {sheet.type === "ss" ? "SS Rates" : "Dist Rates"}
+                        </span>
+                      </td>
+                      <td style={{padding:"7px 10px",color:"#555"}}>{new Date(sheet.appliedAt).toLocaleString("en-IN")}</td>
+                      <td style={{padding:"7px 10px",fontWeight:700,color:"#2E7D32"}}>{sheet.productsUpdated}</td>
+                      <td style={{padding:"7px 10px"}}>
+                        {isActive ? (
+                          <span style={{padding:"3px 10px",borderRadius:12,fontSize:10,fontWeight:800,background:"#2E7D32",color:"white"}}>🟢 ACTIVE</span>
+                        ) : (
+                          <span style={{padding:"3px 10px",borderRadius:12,fontSize:10,fontWeight:600,background:"#F0F0F0",color:"#999"}}>Superseded</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         </Card>
